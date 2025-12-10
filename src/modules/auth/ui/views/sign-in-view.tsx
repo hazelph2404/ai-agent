@@ -38,7 +38,7 @@ export const SignInView = () => {
   });
   const onSubmit = (data: z.infer<typeof formSchema>) => {
     setError(null);
-    
+    setPending(true);
     authClient.signIn.email({
         email:data.email, 
         password: data.password
@@ -49,7 +49,7 @@ export const SignInView = () => {
         router.push('/')
     }, 
     onError: ({error}) => {
-        setError(error.error.message)
+        setError(error.error.message ?? "An error occurred when signing in")
     }
     })
 
@@ -136,7 +136,7 @@ export const SignInView = () => {
               </div>
               <div className="text-center text-sm">
                 Don&apos;t have an account?               
-                <Link href="auth/sign-up" className="underline underline-offset-4"> Sign Up </Link>
+                <Link href="/auth/sign-up" className="underline underline-offset-4"> Sign Up </Link>
               </div>
 
               </div>

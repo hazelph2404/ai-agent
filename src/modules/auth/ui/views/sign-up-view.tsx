@@ -39,20 +39,19 @@ export const SignUpView = () => {
     resolver: zodResolver(formSchema),
     defaultValues: {
         name: "",
-      email: "",
-      password: "",
-      confirmPassword:"",
+        email: "",
+        password: "",
+        confirmPassword:"",
     },
   });
   const onSubmit = (data: z.infer<typeof formSchema>) => {
+    setPending(true);
     setError(null);
     
     authClient.signUp.email({
         name: data.name,
         email:data.email, 
         password: data.password,
-        //so we don't need confirm pass word here?
-        // i assume because in auth object, we did not have confirm password
     },
     {
     onSuccess: () => {
@@ -60,7 +59,7 @@ export const SignUpView = () => {
         router.push('/')
     }, 
     onError: ({error}) => {
-        setError(error.error.message)
+        setError(error.error.message ?? "An error occurred when signing up.")
     }
     })
 
