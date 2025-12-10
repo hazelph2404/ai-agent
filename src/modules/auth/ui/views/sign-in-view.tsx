@@ -18,6 +18,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Card, CardContent } from "@/components/ui/card";
+import Link from "next/link";
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -27,6 +28,7 @@ const formSchema = z.object({
 export const SignInView = () => {
     const router = useRouter();
     const [error, setError] = useState<string | null>(null)
+    const [pending, setPending] = useState(false)
     const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -36,18 +38,21 @@ export const SignInView = () => {
   });
   const onSubmit = (data: z.infer<typeof formSchema>) => {
     setError(null);
+    
     authClient.signIn.email({
         email:data.email, 
         password: data.password
     },
     {
     onSuccess: () => {
+        setPending(false);
         router.push('/')
     }, 
     onError: ({error}) => {
         setError(error.error.message)
     }
     })
+
   }
   return (
     <div className="flex flex-col gap-5">
@@ -111,7 +116,7 @@ export const SignInView = () => {
                     <AlertTitle> {error} </AlertTitle>
                   </Alert>
                 )}
-                <Button type="submit" className="w-full">
+                <Button disabled={pending} type="submit" className="w-full">
                   Sign in
                 </Button>
                 {/* From here to below  */}
@@ -122,16 +127,18 @@ export const SignInView = () => {
                   </span>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
-                <Button variant="outline" type="button" className="w-full">
+                <Button disabled={pending} variant="outline" type="button" className="w-full">
                   Google
                 </Button>
-                <Button variant="outline" type="button" className="w-full">
+                <Button disabled={pending} variant="outline" type="button" className="w-full">
                   Github
                 </Button>
               </div>
               <div className="text-center text-sm">
-                Don't have an account?
+                Don&apos;t have an account?               
+                <Link href="auth/sign-up" className="underline underline-offset-4"> Sign Up </Link>
               </div>
+
               </div>
 
             </form>
