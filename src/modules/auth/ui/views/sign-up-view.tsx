@@ -3,12 +3,12 @@ import { useState } from "react";
 import { z } from "zod";
 import { useForm} from "react-hook-form";
 import { authClient } from "@/lib/auth-client";
-import {useRouter} from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
 import { OctagonAlertIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertTitle } from "@/components/ui/alert";
+import {FaGithub, FaGoogle} from 'react-icons';
 import {
   Form,
   FormControl,
@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/form";
 import { Card, CardContent } from "@/components/ui/card";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
     name: z.string().min(1, {message: "Name is required"}), 
@@ -26,13 +27,12 @@ const formSchema = z.object({
     password: z.string().min(1, { message: "Password is required" }),
     confirmPassword: z.string().min(1, { message: "Password is required" }),
 })
-//???????????
 .refine((data)=> data.password === data.confirmPassword, {
     message: "Password don't match", 
     path:['confirmPassword']
 });
 export const SignUpView = () => {
-    const router = useRouter();
+  const router = useRouter();
     const [error, setError] = useState<string | null>(null)
     const [pending, setPending] = useState(false)
     const form = useForm<z.infer<typeof formSchema>>({
@@ -52,14 +52,17 @@ export const SignUpView = () => {
         name: data.name,
         email:data.email, 
         password: data.password,
+        callbackURL: "/"
     },
     {
     onSuccess: () => {
-        setPending(false);
-        router.push('/')
+      router.push("/")
     }, 
     onError: ({error}) => {
         setError(error.error.message ?? "An error occurred when signing up.")
+    }, 
+    onFinally: () => {
+      setPending(false);
     }
     })
 
@@ -168,22 +171,24 @@ export const SignUpView = () => {
                     <AlertTitle> {error} </AlertTitle>
                   </Alert>
                 )}
-                <Button disabled={pending} type="submit" className="w-full">
-                  Sign Up
-                </Button>
-                {/* From here to below  */}
-                {/* This portion does not have space in between elements correctly! */}
+                <Button type="submit" disabled={pending || !form.formState.isValid} className="w-full"> Sign Up </Button>
                 <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
                   <span className="bg-card text-muted-foreground relative z-10 px-2">
                     Or continue with
                   </span>
                 </div>
+
+                {/* Social medias */}
                 <div className="grid grid-cols-2 gap-4">
-                <Button disabled={pending} variant="outline" type="button" className="w-full">
-                  Google
+                <Button onClick={() => {
+                  authClient.signIn.social({provider:'google', callbackURL: "/"})
+                }} disabled={pending} variant="outline" type="button" className="w-full">
+                  <FaGoogle/>
                 </Button>
-                <Button disabled={pending} variant="outline" type="button" className="w-full">
-                  Github
+                <Button onClick={()=>{
+                  authClient.signIn.social({provider:'github', callbackURL: "/"})
+                }} disabled={pending} variant="outline" type="button" className="w-full">
+                  <FaGithub/>
                 </Button>
               </div>
               <div className="text-center text-sm">
