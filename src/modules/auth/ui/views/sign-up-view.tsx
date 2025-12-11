@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { OctagonAlertIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertTitle } from "@/components/ui/alert";
-import {FaGithub, FaGoogle} from 'react-icons';
+import {FaGithub, FaGoogle} from 'react-icons/fa';
 import {
   Form,
   FormControl,
