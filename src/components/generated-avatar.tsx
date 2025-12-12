@@ -11,5 +11,5 @@ export default function GeneratedAvatar({ seed, className }: { seed: string; cla
         const base64 = btoa(unescape(encodeURIComponent(svg)));
         return `data:image/svg+xml;base64,${base64}`;
     }, [seed]);
-    return <Image src={dataUri} alt="Avatar" className={className} />;
+    return <Image src={dataUri} alt="Avatar" width={32} height={32} className={className} />;
 }
