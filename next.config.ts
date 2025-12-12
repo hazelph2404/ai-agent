@@ -1,5 +1,5 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+import type { NextConfig } from 'next';
+const nextConfig: NextConfig = {
   experimental: {
     // disable next.js dev tools overlay
     nextScriptWorkers: false,
@@ -17,4 +17,4 @@ const nextConfig = {
   },
 };
 
-module.exports = nextConfig;
+export default nextConfig;
