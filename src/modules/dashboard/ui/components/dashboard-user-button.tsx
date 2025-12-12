@@ -6,7 +6,7 @@ import { authClient } from '@/lib/auth-client';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator , DropdownMenuItem } from '@/components/ui/dropdown-menu'
 import {Drawer, DrawerTitle,  DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader,DrawerTrigger, DrawerClose} from '@/components/ui/drawer'
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
-import { ChevronDown, CreditCardIcon, LogoutIcon} from "lucide-react";
+import { ChevronDown, CreditCardIcon, LogOut} from "lucide-react";
 import {useIsMobile} from '@/hooks/use-mobile'
 import Link from 'next/link';
 import { useRouter } from "next/navigation";
@@ -22,7 +22,7 @@ export const DashboardUserButton = () => {
     const seed = name;
     const image = user?.image;
     if (isPending || !user) return null;
-    
+
     const onLogOut = async () => {
         await authClient.signOut();
         router.push("/auth/sign-in");
@@ -57,7 +57,7 @@ export const DashboardUserButton = () => {
                     <DrawerFooter> 
                         <Button variant="outline" onClick={()=>{}}> <CreditCardIcon className="size-4 text-black"/> Billing </Button>
                         <DrawerClose asChild>
-                            <Button onClick={onLogOut}> Log out </Button>
+                            <Button onClick={onLogOut}> <LogOut/> Log out </Button>
                         </DrawerClose>
                     </DrawerFooter>
                 </DrawerContent>) : (null)}
