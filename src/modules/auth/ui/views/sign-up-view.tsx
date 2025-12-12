@@ -1,14 +1,14 @@
 "use client";
 import { useState } from "react";
 import { z } from "zod";
-import { useForm} from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { authClient } from "@/lib/auth-client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
 import { OctagonAlertIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertTitle } from "@/components/ui/alert";
-import {FaGithub, FaGoogle} from 'react-icons/fa';
+import { FaGithub, FaGoogle } from "react-icons/fa";
 import {
   Form,
   FormControl,
@@ -21,52 +21,68 @@ import { Card, CardContent } from "@/components/ui/card";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-const formSchema = z.object({
-    name: z.string().min(1, {message: "Name is required"}), 
+const formSchema = z
+  .object({
+    name: z.string().min(1, { message: "Name is required" }),
     email: z.string().email(),
     password: z.string().min(1, { message: "Password is required" }),
     confirmPassword: z.string().min(1, { message: "Password is required" }),
-})
-.refine((data)=> data.password === data.confirmPassword, {
-    message: "Password don't match", 
-    path:['confirmPassword']
-});
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Password don't match",
+    path: ["confirmPassword"],
+  });
 export const SignUpView = () => {
   const router = useRouter();
-    const [error, setError] = useState<string | null>(null)
-    const [pending, setPending] = useState(false)
-    const form = useForm<z.infer<typeof formSchema>>({
+  const [error, setError] = useState<string | null>(null);
+  const [pending, setPending] = useState(false);
+  const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-        name: "",
-        email: "",
-        password: "",
-        confirmPassword:"",
+      name: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
     },
   });
   const onSubmit = (data: z.infer<typeof formSchema>) => {
     setPending(true);
     setError(null);
-    
-    authClient.signUp.email({
-        name: data.name,
-        email:data.email, 
-        password: data.password,
-        callbackURL: "/"
-    },
-    {
-    onSuccess: () => {
-      router.push("/")
-    }, 
-    onError: ({error}) => {
-        setError(error.error.message ?? "An error occurred when signing up.")
-    }, 
-    onFinally: () => {
-      setPending(false);
-    }
-    })
 
-  }
+    authClient.signUp.email(
+      {
+        name: data.name,
+        email: data.email,
+        password: data.password,
+        callbackURL: "/",
+      },
+      {
+        onSuccess: () => {
+          router.push("/");
+        },
+        onError: ({ error }) => {
+          setError(error.error.message ?? "An error occurred when signing up.");
+        },
+        onFinally: () => {
+          setPending(false);
+        },
+      }
+    );
+  };
+
+  const handleSocialSignIn = async (provider: "google" | "github") => {
+    setPending(true);
+    setError(null);
+    authClient.signIn.social(
+      { provider, callbackURL: "/" },
+      {
+        onError: ({ error }) => {
+          setError(error.message ?? `Failed to sign in with ${provider}`);
+          setPending(false);
+        },
+      }
+    );
+  };
   return (
     <div className="flex flex-col gap-5">
       <Card className="overflow-hidden p-0">
@@ -136,7 +152,6 @@ export const SignUpView = () => {
                             placeholder="********"
                             {...field}
                           />
-                          
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -157,7 +172,6 @@ export const SignUpView = () => {
                             placeholder="********"
                             {...field}
                           />
-                          
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -171,7 +185,14 @@ export const SignUpView = () => {
                     <AlertTitle> {error} </AlertTitle>
                   </Alert>
                 )}
-                <Button type="submit" disabled={pending || !form.formState.isValid} className="w-full"> Sign Up </Button>
+                <Button
+                  type="submit"
+                  disabled={pending || !form.formState.isValid}
+                  className="w-full"
+                >
+                  {" "}
+                  Sign Up{" "}
+                </Button>
                 <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
                   <span className="bg-card text-muted-foreground relative z-10 px-2">
                     Or continue with
@@ -180,24 +201,37 @@ export const SignUpView = () => {
 
                 {/* Social medias */}
                 <div className="grid grid-cols-2 gap-4">
-                <Button onClick={() => {
-                  authClient.signIn.social({provider:'google', callbackURL: "/"})
-                }} disabled={pending} variant="outline" type="button" className="w-full">
-                  <FaGoogle/>
-                </Button>
-                <Button onClick={()=>{
-                  authClient.signIn.social({provider:'github', callbackURL: "/"})
-                }} disabled={pending} variant="outline" type="button" className="w-full">
-                  <FaGithub/>
-                </Button>
+                  <Button
+                    onClick={() => handleSocialSignIn("google")}
+                    disabled={pending}
+                    variant="outline"
+                    type="button"
+                    className="w-full"
+                    aria-label="Sign up with Google"
+                  >
+                    <FaGoogle />
+                  </Button>
+                  <Button
+                    onClick={() => handleSocialSignIn("github")}
+                    disabled={pending}
+                    variant="outline"
+                    type="button"
+                    className="w-full"
+                    aria-label="Sign up with GitHub"
+                  >
+                    <FaGithub />
+                  </Button>
+                </div>
+                <div className="text-center text-sm">
+                  Already a member?
+                  <Link
+                    href="/auth/sign-in"
+                    className="underline underline-offset-4"
+                  >
+                    Sign In
+                  </Link>
+                </div>
               </div>
-              <div className="text-center text-sm">
-                Already a member? 
-                <Link href="/auth/sign-in" className="underline underline-offset-4"> Sign In </Link>
-              </div>
-
-              </div>
-
             </form>
           </Form>
 
