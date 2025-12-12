@@ -1,7 +1,20 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
-  /* config options here */
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  experimental: {
+    // disable next.js dev tools overlay
+    nextScriptWorkers: false,
+    serverActions: {
+      allowedOrigins: [],
+    },
+    turbo: {
+      resolveModuleFallbacks: false,
+    },
+    ppr: false,
+  },
+  devIndicators: {
+    buildActivity: false,
+    buildActivityPosition: "bottom-right",
+  },
 };
 
-export default nextConfig;
+module.exports = nextConfig;
