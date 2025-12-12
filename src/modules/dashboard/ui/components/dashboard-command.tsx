@@ -3,7 +3,7 @@ import {CommandDialog, CommandInput, CommandList, CommandItem} from '@/component
 import {Dispatch, SetStateAction} from 'react';
 interface Props {
     open: boolean,
-    setOpen: React<SetStateAction<boolean>>;
+    setOpen: Dispatch<SetStateAction<boolean>>;
 }
 const DashboardCommand = ({open, setOpen}: Props) => {
     return(
