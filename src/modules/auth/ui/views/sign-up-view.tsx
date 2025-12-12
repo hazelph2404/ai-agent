@@ -9,6 +9,7 @@ import { OctagonAlertIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertTitle } from "@/components/ui/alert";
 import { FaGithub, FaGoogle } from "react-icons/fa";
+import Image from 'next/image';
 import {
   Form,
   FormControl,
@@ -237,8 +238,7 @@ export const SignUpView = () => {
 
           {/* RIGHT PANEL */}
           <div className="bg-radial from-sidebar-accent to-sidebar relative hidden md:flex flex-col gap-y-4 items-center justify-center">
-            <img src="/logo.svg" alt="Image" className="h-[92px] w-[92px]" />
-            <p> Meet.AI </p>
+          <Image src="/logo.svg" alt="logo" width={90} height={90} className="text-[oklch(0.97_0.01_260)]"/>
           </div>
         </CardContent>
       </Card>

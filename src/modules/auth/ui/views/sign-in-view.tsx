@@ -150,7 +150,7 @@ export const SignInView = () => {
 
           {/* RIGHT PANEL */}
           <div className="bg-radial from-sidebar-accent to-sidebar relative hidden md:flex flex-col gap-y-4 items-center justify-center">
-          <Image src="/logo.svg" alt="logo" width="90" height="90" className="text-[oklch(0.97_0.01_260)]"/>
+          <Image src="/logo.svg" alt="logo" width={90} height={90} className="text-[oklch(0.97_0.01_260)]"/>
 
             <p> Meet.AI </p>
           </div>

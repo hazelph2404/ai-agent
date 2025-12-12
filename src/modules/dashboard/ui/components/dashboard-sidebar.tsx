@@ -54,9 +54,9 @@ const DashboardSidebar = () => {
                         asChild
                         isActive={pathname === item.href}
                         className={cn(
-                            "h-10 hover:bg-liner-to-r/oklch border border-transparent hover:border-[#5D6B68]/10 from-sidebar-accent from-[5%] via-[30%] via-sidebar/50 to-sidebar/50",
+                            "h-10 hover:bg-linear-to-r/oklch border border-transparent hover:border-[#5D6B68]/10 from-sidebar-accent from-[5%] via-[30%] via-sidebar/50 to-sidebar/50",
                             pathname === item.href &&
-                              "bg-liner-to-r/oklch border-[#5D6B68]/10"
+                              "bg-linear-to-r/oklch border-[#5D6B68]/10"
                           )}
                       >
                         <Link href={item.href} className="flex items-center gap-2">
@@ -84,9 +84,9 @@ const DashboardSidebar = () => {
                         asChild
                         isActive={pathname === item.href}
                         className={cn(
-                            "h-10 hover:bg-liner-to-r/oklch border border-transparent hover:border-[#5D6B68]/10 from-sidebar-accent from-[5%] via-[30%] via-sidebar/50 to-sidebar/50",
+                            "h-10 hover:bg-linear-to-r/oklch border border-transparent hover:border-[#5D6B68]/10 from-sidebar-accent from-[5%] via-[30%] via-sidebar/50 to-sidebar/50",
                             pathname === item.href &&
-                              "bg-liner-to-r/oklch border-[#5D6B68]/10"
+                              "bg-linear-to-r/oklch border-[#5D6B68]/10"
                           )}
                       >
                         <Link href={item.href} className="flex items-center gap-2">
