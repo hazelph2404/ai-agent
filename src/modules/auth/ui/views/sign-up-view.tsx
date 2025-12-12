@@ -9,6 +9,7 @@ import { OctagonAlertIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertTitle } from "@/components/ui/alert";
 import { FaGithub, FaGoogle } from "react-icons/fa";
+import Image from 'next/image';
 import {
   Form,
   FormControl,
