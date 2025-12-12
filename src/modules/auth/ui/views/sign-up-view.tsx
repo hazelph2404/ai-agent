@@ -236,17 +236,16 @@ export const SignUpView = () => {
           </Form>
 
           {/* RIGHT PANEL */}
-          <div className="bg-radial from-green-500 to-green-800 relative hidden md:flex flex-col gap-y-4 items-center justify-center">
+          <div className="bg-radial from-sidebar-accent to-sidebar relative hidden md:flex flex-col gap-y-4 items-center justify-center">
             <img src="/logo.svg" alt="Image" className="h-[92px] w-[92px]" />
             <p> Meet.AI </p>
           </div>
         </CardContent>
       </Card>
 
-      <div className="text-muted-foreground *:[a]:hover:text-primary text-center text-xs text-balance *:[a]:underline *:[a]:underline-offset-4">
-        By clicking continue, you agree to our{" "}
-        <a href="#"> Terms of service </a> and <a> Privacy Policy</a>
-      </div>
+        <div className="text-muted-foreground *:[a]:hover:text-primary text-center text-xs text-balance *:[a]:underline *:[a]:underline-offset-4">
+                By clicking continue, you agree to our <a href="#"> Terms of service </a> and <a href="#"> Privacy Policy</a>
+        </div>
     </div>
   );
 };

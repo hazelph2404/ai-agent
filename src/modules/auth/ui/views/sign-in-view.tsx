@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/form";
 import { Card, CardContent } from "@/components/ui/card";
 import Link from "next/link";
+import Image from 'next/image';
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -148,15 +149,16 @@ export const SignInView = () => {
           </Form>
 
           {/* RIGHT PANEL */}
-          <div className="bg-radial from-green-500 to-green-800 relative hidden md:flex flex-col gap-y-4 items-center justify-center">
-            <img src="/logo.svg" alt="Image" className="h-[92px] w-[92px]" />
+          <div className="bg-radial from-sidebar-accent to-sidebar relative hidden md:flex flex-col gap-y-4 items-center justify-center">
+          <Image src="/logo.svg" alt="logo" width="90" height="90" className="text-[oklch(0.97_0.01_260)]"/>
+
             <p> Meet.AI </p>
           </div>
         </CardContent>
       </Card>
 
         <div className="text-muted-foreground *:[a]:hover:text-primary text-center text-xs text-balance *:[a]:underline *:[a]:underline-offset-4">
-                By clicking continue, you agree to our <a href="#"> Terms of service </a> and <a> Privacy Policy</a>
+                By clicking continue, you agree to our <a href="#"> Terms of service </a> and <a href="#"> Privacy Policy</a>
         </div>
     </div>
   );
