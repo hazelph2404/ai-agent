@@ -226,7 +226,7 @@ export const SignUpView = () => {
                 <div className="text-center text-sm">
                   Already a member?
                   <Link
-                    href="/auth/sign-in"
+                    href="/sign-in"
                     className="underline underline-offset-4"
                   >
                     Sign In
