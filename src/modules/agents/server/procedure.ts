@@ -5,7 +5,6 @@ import { agents } from '@/db/schema';
 export const agentRouters = createTRPCRouter({
     getMany: baseProcedure.query(async ()=> {
         const data = await db.select().from(agents);
-
         return data;
     })
     
