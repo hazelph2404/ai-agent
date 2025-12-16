@@ -7,11 +7,18 @@ interface Props {
 }
 
 export default function Layout({ children }: Props) {
-  return (
-    <SidebarProvider>
-      <DashboardSidebar />
-      <DashboardNavbar/>
-      {children}
-    </SidebarProvider>
-  );
-}
+      return (
+        <SidebarProvider>
+          <div className="flex min-h-screen w-full">
+            <DashboardSidebar />
+            <div className="flex flex-1 flex-col">
+              <DashboardNavbar />
+              <main className="flex-1 overflow-auto px-4">
+                {children}
+              </main>
+            </div>
+          </div>
+        </SidebarProvider>
+      );
+    }
+    

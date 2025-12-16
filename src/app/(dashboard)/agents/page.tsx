@@ -7,7 +7,7 @@ import {dehydrate, HydrationBoundary} from '@tanstack/react-query';
 import { Suspense } from 'react';
 const Page = async () => {
     const queryClient = getQueryClient();
-    void queryClient.prefetchQuery(trpc.agent.getMany.queryOptions()); //SSR
+    await queryClient.prefetchQuery(trpc.agent.getMany.queryOptions()); //SSR
     return (
         <div>
             <HydrationBoundary state={dehydrate(queryClient)}>
