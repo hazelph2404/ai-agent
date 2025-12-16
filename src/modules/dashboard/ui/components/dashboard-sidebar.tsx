@@ -3,7 +3,7 @@ import React from 'react'
 import { VideoIcon, BotIcon, StarIcon } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
-import {Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem} from "@/components/ui/sidebar";
+import {Sidebar, SidebarContent, SidebarFooter, SidebarGroup,  SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem} from "@/components/ui/sidebar";
 import {Separator} from '@/components/ui/separator' 
 import { cn } from '@/lib/utils';
 import { usePathname } from "next/navigation";

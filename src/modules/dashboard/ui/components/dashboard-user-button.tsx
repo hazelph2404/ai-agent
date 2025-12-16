@@ -25,7 +25,7 @@ export const DashboardUserButton = () => {
 
     const onLogOut = async () => {
         await authClient.signOut();
-        router.push("/auth/sign-in");
+        router.push("/sign-in");
       };
     if (isMobile) {
         return (
