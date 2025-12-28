@@ -74,15 +74,15 @@ function CommandResponsiveDialog({
 
   return (
     <Dialog {...props}>
-      <DialogHeader className="sr-only">
-        <DialogTitle>{title}</DialogTitle>
-        {description ? <DialogDescription>{description}</DialogDescription> : null}
-      </DialogHeader>
 
       <DialogContent
         className={cn("overflow-hidden p-0", contentClassName, className)}
         showCloseButton={showCloseButton}
       >
+      <DialogHeader className="sr-only">
+        <DialogTitle>{title}</DialogTitle>
+        {description ? <DialogDescription>{description}</DialogDescription> : null}
+      </DialogHeader>
         <Command className={commandShellClass}>{children}</Command>
       </DialogContent>
     </Dialog>

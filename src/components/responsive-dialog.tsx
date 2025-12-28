@@ -10,8 +10,6 @@ type ResponsiveDialogProps = React.PropsWithChildren<{
 const ResponsiveDialog = ({
   title,
   description,
-  open,
-  onOpenChange,
   children,
 }: ResponsiveDialogProps) => {
   return (
