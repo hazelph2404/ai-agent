@@ -5,11 +5,13 @@ import AgentsView from '@/modules/agents/ui/agents-view'
 import { getQueryClient, trpc } from '@/trpc/server'
 import {dehydrate, HydrationBoundary} from '@tanstack/react-query';
 import { Suspense } from 'react';
+import AgentListHeader from '@/modules/agents/ui/components/agent-list-header';
 const Page = async () => {
     const queryClient = getQueryClient();
     await queryClient.prefetchQuery(trpc.agent.getMany.queryOptions()); //SSR
     return (
         <div>
+            <AgentListHeader></AgentListHeader>
             <HydrationBoundary state={dehydrate(queryClient)}>
                 <Suspense fallback={<LoadingState title="Loading Agents" description="This may take a few seconds"/>}>
                     <ErrorBoundary fallback={<ErrorState title="Error" description="Cannot load agent"/>}>
