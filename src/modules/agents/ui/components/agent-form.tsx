@@ -16,6 +16,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
+import { toast } from "sonner";
 
 type FormValues = z.infer<typeof agentsInsertSchema>;
 
@@ -55,7 +56,8 @@ export const AgentForm = ({
         onSuccess?.();
         form.reset({ name: "", instructions: "" });
       },
-      onError: () => {
+      onError: (error) => {
+        toast.error(error.message);
         // handled by createAgent.isError UI below
       },
     })
@@ -91,7 +93,11 @@ export const AgentForm = ({
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
-        <GeneratedAvatar seed={form.watch("name")} className="border size-16"/>
+        <GeneratedAvatar
+            seed={form.watch("name")}
+            className="size-16 rounded-full overflow-hidden border"
+            />
+
           <FormField
             control={form.control}
             name="name"
