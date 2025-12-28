@@ -94,9 +94,11 @@ export const AgentForm = ({
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
         <GeneratedAvatar
-            seed={form.watch("name")}
-            className="size-16 rounded-full overflow-hidden border"
-            />
+            seed={form.watch("name") || "Agent"}
+            shape="circle"
+            className="border size-16"
+        />
+
 
           <FormField
             control={form.control}
