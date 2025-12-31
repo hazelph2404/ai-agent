@@ -1,14 +1,15 @@
+//set up TRPC: base procedure, protected procedures, etc
 import { auth } from '@/lib/auth';
 import {initTRPC, TRPCError} from '@trpc/server';
 import { headers } from 'next/headers';
 import {cache } from 'react';
 
+//dummy user id when user has not logged in yet. 
 export const createTRPCContext = cache(async() => {
     return {userId: 'user_123'};
 });
 
-const t = initTRPC.create({
-    
+const t = initTRPC.create({ 
 })
 
 export const createTRPCRouter = t.router;
