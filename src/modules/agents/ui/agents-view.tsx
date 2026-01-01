@@ -6,9 +6,10 @@ import { DataTable } from './components/data-table';
 import { columns } from './components/columns';
 import EmptyState from '@/components/empty-state';
 import { useAgentsFilter } from '../hooks/use-agents-filter';
+import { DataPagination } from './components/data-pagination';
 
 const AgentsView = () => {
-  const [filters] = useAgentsFilter();
+  const [filters, setFilters] = useAgentsFilter();
   const trpc = useTRPC();
 
   const { data } = useQuery(
@@ -29,6 +30,7 @@ const AgentsView = () => {
           description="Create an agent to join your meeting..."
         />
       )}
+      <DataPagination page={filters.page} totalPages={data.totalPages} onPageChange={(page) => setFilters({...filters, page})}/>
     </div>
   );
 };
