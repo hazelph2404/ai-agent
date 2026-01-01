@@ -10,7 +10,7 @@ export const DataPagination = ({page, totalPages, onPageChange}: Props) => {
             <div className="flex-1 text-muted-foreground text-sm"> page {page} of {totalPages || 1} pages. </div>
             <div className="flex items-center justify-end space-x-2 py-4">  
                 <Button disabled={page === 1} variant="outline" size="sm" onClick={() => onPageChange(Math.max(1, page-1))}> Previous</Button>
-                <Button disabled={page === totalPages || page === 0} variant="outline" size="sm" onClick={() => onPageChange(Math.min(totalPages, page+1))}> Next </Button>
+                <Button disabled={page === totalPages} variant="outline" size="sm" onClick={() => onPageChange(Math.min(totalPages, page+1))}> Next </Button>
             </div>
         </div>
 
