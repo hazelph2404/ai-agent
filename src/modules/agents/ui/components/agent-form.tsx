@@ -50,9 +50,9 @@ export const AgentForm = ({
   const name = form.watch("name");
 
   const createAgent = useMutation(
-    trpc.agent.create.mutationOptions({
+    trpc.agents.create.mutationOptions({
       onSuccess: async () => {
-        await queryClient.invalidateQueries(trpc.agent.getMany.queryOptions());
+        await queryClient.invalidateQueries(trpc.agents.getMany.queryOptions({}));
         onSuccess?.();
         form.reset({ name: "", instructions: "" });
       },
