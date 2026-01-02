@@ -1,20 +1,31 @@
-
-
 import { getQueryClient, trpc } from "@/trpc/server";
 import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 import { ErrorBoundary } from "react-error-boundary"
 import { Suspense } from "react";
 import {AgentIdView, AgentErrorState, AgentLoadingState} from "@/modules/agents/ui/views/agent-id-view";
-interface Props{
-    params: Promise<{agentId: string}>
-};
+import { headers } from "next/headers";
+import { auth } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
-const Page = async ({params}:Props) => {
+
+interface Props {
+    params: Promise<{ agentId: string }>;
+ }
+
+const Page = async ({ params }: Props) => {
     const {agentId} = await params;
-    const queryClient = getQueryClient(); 
-    //still don't understand this function
+    const requestHeaders = await headers();
+
+    const session = await auth.api.getSession({
+        headers: requestHeaders,
+    })
+    if (!session){
+        redirect("/sign-in");
+    }
+    const queryClient = getQueryClient({headers: requestHeaders}); 
+
     void queryClient.prefetchQuery(
-        trpc.agents.getOne.queryOptions({id: agentId})
+        trpc.agents.getOne.queryOptions({id:agentId})
     )
     return(
         <HydrationBoundary state={dehydrate(queryClient)}>

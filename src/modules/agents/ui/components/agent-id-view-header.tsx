@@ -40,7 +40,7 @@ const AgentIdViewHeader = ({agentId, agentName, onEdit,onRemove}: Props) => {
 
             <DropdownMenu modal={false}>
                 <DropdownMenuTrigger asChild>
-                    <Button variant="ghost">
+                    <Button variant="ghost" aria-label="Agent actions menu">
                         <MoreVerticalIcon/>
                     </Button>
                 </DropdownMenuTrigger>

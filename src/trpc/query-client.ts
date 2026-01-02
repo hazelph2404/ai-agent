@@ -2,7 +2,8 @@ import {
     defaultShouldDehydrateQuery,
     QueryClient,
   } from '@tanstack/react-query';
-  export function makeQueryClient() {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  export function makeQueryClient(p0: unknown) {
     return new QueryClient({
       defaultOptions: {
         queries: {
