@@ -6,7 +6,7 @@ import {
     BreadcrumbList, 
     BreadcrumbSeparator
 } from '@/components/ui/breadcrumb';
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuItem, DropdownMenuContent  } from "@radix-ui/react-dropdown-menu";
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuItem, DropdownMenuContent  } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
 import { ChevronRightIcon, TrashIcon, PencilIcon, MoreVerticalIcon } from "lucide-react";
 interface Props {
@@ -17,7 +17,7 @@ interface Props {
 }
 const AgentIdViewHeader = ({agentId, agentName, onEdit,onRemove}: Props) => {
     return(
-        <div className="flex items-center justify-center">
+        <div className="flex items-center justify-between">
             <Breadcrumb>
                 <BreadcrumbList>
                     <BreadcrumbItem>
