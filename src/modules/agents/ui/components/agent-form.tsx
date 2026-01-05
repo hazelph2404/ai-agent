@@ -37,6 +37,7 @@ export const AgentForm = ({
   const queryClient = useQueryClient();
 
   const isEdit = !!initialValues?.id;
+  //initialValues exists → edit mode ; no initialValues → create mode
 
   const form = useForm<FormValues>({
     resolver: zodResolver(agentsInsertSchema),
@@ -47,12 +48,13 @@ export const AgentForm = ({
     mode: "onChange",
   });
 
-  const name = form.watch("name");
 
   const createAgent = useMutation(
     trpc.agents.create.mutationOptions({
       onSuccess: async () => {
+        //TODO: invalidate for free tier users
         await queryClient.invalidateQueries(trpc.agents.getMany.queryOptions({}));
+
         onSuccess?.();
         form.reset({ name: "", instructions: "" });
       },
@@ -62,13 +64,31 @@ export const AgentForm = ({
       },
     })
   );
+  const updateAgent = useMutation(
+    trpc.agents.update.mutationOptions({
+      onSuccess: async () => {
+        await queryClient.invalidateQueries(trpc.agents.getMany.queryOptions({}));
 
-  const isPending = createAgent.isPending;
+        if(initialValues?.id){
+          await queryClient.invalidateQueries(trpc.agents.getOne.queryOptions({id: initialValues.id}))
+        }
+
+        onSuccess?.();
+        form.reset({ name: "", instructions: "" });
+      },
+      onError: (error) => {
+        toast.error(error.message);
+
+        //TODO: if error code is "FORBIDDEN", lead to /upgrade. 
+      },
+    })
+  );
+
+  const isPending = createAgent.isPending || updateAgent.isPending;
 
   const onSubmit = (values: FormValues) => {
-    if (isEdit) {
-      // if you add update later, swap this
-      console.log("TODO: update Agent", values);
+    if (isEdit && initialValues?.id) {
+      updateAgent.mutate({id: initialValues.id, ...values})
       return;
     }
     else{
