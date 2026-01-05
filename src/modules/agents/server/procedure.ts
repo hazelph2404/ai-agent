@@ -12,12 +12,15 @@ import { agentsInsertSchema } from "../schemas";
 export const agentRouters = createTRPCRouter({
   getOne: protectedProcedure
     .input(z.object({ id: z.string() }))
-
     .query(async ({ input, ctx }) => {
       const [existingAgent] = await db
         .select({
           ...getTableColumns(agents),
-          meetingCount: sql<number>`5`,
+          meetingCount: sql<number>`(
+            SELECT count(*) 
+            FROM ${agents} 
+            WHERE ${agents.userId} = ${ctx.auth.user.id}
+          )`.mapWith(Number),
         })
         .from(agents)
         .where(
@@ -41,7 +44,8 @@ export const agentRouters = createTRPCRouter({
         pageSize: z.number().min(MIN_PAGE_SIZE).max(MAX_PAGE_SIZE).default(DEFAULT_PAGE_SIZE),
         search: z.string().nullish(),
     }))
-    // if i don't set this as optional, that means i have to handle errors inside agents-view.tsx or any other files that i will use this function.
+    // if i don't set this as optional, 
+    //that means i have to handle errors inside agents-view.tsx or any other files that i will use this function.
 
       .query(async ({ ctx, input }) => {
         const {search, page, pageSize} = input
@@ -55,7 +59,7 @@ export const agentRouters = createTRPCRouter({
           and( 
             eq(agents.userId, ctx.auth.user.id), 
             search ? ilike(agents.name, `%${search}%`) : sql`true`
-          )
+        ) 
         )
         .orderBy(desc(agents.createdAt), desc(agents.id))
         .limit(pageSize)
@@ -88,4 +92,33 @@ export const agentRouters = createTRPCRouter({
 
       return createdAgent;
     }),
+
+    delete: protectedProcedure
+      .input(z.object({ id: z.string() }))
+      .mutation(async ({ input, ctx }) => {
+        const [deletedAgent] = await db
+          .delete(agents)
+          .where(
+            and(
+              eq(agents.id, input.id),
+              eq(agents.userId, ctx.auth.user.id)
+            )
+          )
+          .returning(); 
+    if (!deletedAgent) {
+        throw new TRPCError({ code: "NOT_FOUND" });
+    }
+    return deletedAgent;
+  }),
+  update: protectedProcedure
+    .input(agentsInsertSchema.extend({id: z.string()}))
+    .mutation(async({input, ctx}) => {
+      const {id, ...dataToUpdate} = input;
+      const [updatedAgent] = await db.update(agents).set(dataToUpdate).where(and(eq(agents.id, id), eq(agents.userId, ctx.auth.user.id)))
+    .returning();
+    if (!updatedAgent){
+      throw new TRPCError({code: "NOT_FOUND"});
+    }
+    return updatedAgent;
+  }),
 });
