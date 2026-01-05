@@ -7,7 +7,7 @@ import { z } from "zod";
 import { MIN_PAGE_SIZE , MAX_PAGE_SIZE, DEFAULT_PAGE_SIZE} from "@/constants";
 
 import { agents } from "@/db/schema";
-import { agentsInsertSchema } from "../schemas";
+import { agentsInsertSchema, agentsUpdatedSchema } from "../schemas";
 
 export const agentRouters = createTRPCRouter({
   getOne: protectedProcedure
@@ -111,7 +111,7 @@ export const agentRouters = createTRPCRouter({
     return deletedAgent;
   }),
   update: protectedProcedure
-    .input(agentsInsertSchema.extend({id: z.string()}))
+    .input(agentsUpdatedSchema)
     .mutation(async({input, ctx}) => {
       const {id, ...dataToUpdate} = input;
       const [updatedAgent] = await db.update(agents).set(dataToUpdate).where(and(eq(agents.id, id), eq(agents.userId, ctx.auth.user.id)))
