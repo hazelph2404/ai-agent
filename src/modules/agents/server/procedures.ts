@@ -10,6 +10,7 @@ import { agents } from "@/db/schema";
 import { agentsInsertSchema, agentsUpdatedSchema } from "../schemas";
 
 export const agentRouters = createTRPCRouter({
+  
   getOne: protectedProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ input, ctx }) => {
@@ -38,7 +39,7 @@ export const agentRouters = createTRPCRouter({
     }),
     //we don't need input from user
     // we only need ctx to know and filter based on the user id attached with context. 
-      getMany: protectedProcedure
+    getMany: protectedProcedure
       .input(z.object({
         page: z.number().min(1).default(1),
         pageSize: z.number().min(MIN_PAGE_SIZE).max(MAX_PAGE_SIZE).default(DEFAULT_PAGE_SIZE),
@@ -110,6 +111,7 @@ export const agentRouters = createTRPCRouter({
     }
     return deletedAgent;
   }),
+
   update: protectedProcedure
     .input(agentsUpdatedSchema)
     .mutation(async({input, ctx}) => {
