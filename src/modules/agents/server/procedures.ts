@@ -6,7 +6,7 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { MIN_PAGE_SIZE , MAX_PAGE_SIZE, DEFAULT_PAGE_SIZE} from "@/constants";
 
-import { agents } from "@/db/schema";
+import { agents } from "@/db/schemas";
 import { agentsInsertSchema, agentsUpdatedSchema } from "../schemas";
 
 export const agentRouters = createTRPCRouter({

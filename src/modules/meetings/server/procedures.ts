@@ -1,6 +1,6 @@
 import { createTRPCRouter, protectedProcedure } from "@/trpc/init";
 import { db } from "@/db";
-import { meetings, agents } from "@/db/schema";
+import { meetings, agents } from "@/db/schemas";
 import { and, count, desc, eq, ilike, sql} from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
@@ -107,26 +107,40 @@ export const meetingsRouter = createTRPCRouter({
   // Create meeting
   // ======================
   create: protectedProcedure
-    .input(
-      z.object({
-        name: z.string().min(1),
-        agentId: z.string(),
+  .input(
+    z.object({
+      name: z.string().min(1),
+      agentId: z.string(),
+    })
+  )
+  .mutation(async ({ ctx, input }) => {
+    // Verify the agent exists and belongs to the current user
+    const [agent] = await db
+      .select({ id: agents.id })
+      .from(agents)
+      .where(
+        and(
+          eq(agents.id, input.agentId),
+          eq(agents.userId, ctx.auth.user.id)
+        )
+      );
+    if (!agent) {
+      throw new TRPCError({ 
+        code: "NOT_FOUND", 
+        message: "Agent not found or does not belong to you" 
+      });
+    }
+    const [meeting] = await db
+      .insert(meetings)
+      .values({
+        name: input.name,
+        agentId: input.agentId,
+        userId: ctx.auth.user.id,
+        status: "upcoming",
       })
-    )
-    .mutation(async ({ ctx, input }) => {
-      const [meeting] = await db
-        .insert(meetings)
-        .values({
-          name: input.name,
-          agentId: input.agentId,
-          userId: ctx.auth.user.id,
-          status: "upcoming",
-        })
-        .returning();
-
-      return meeting;
-    }),
-
+      .returning();
+    return meeting;
+  }),
   // ======================
   // Update meeting
   // ======================

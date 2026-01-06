@@ -22,12 +22,12 @@ export default MeetingView
 
 export const LoadingMeeting = () => {
   return(
-    <LoadingState title="Loading States" description="This may take a few seconds"/>
+    <LoadingState title="Loading meetings" description="This may take a few seconds"/>
   )
 }
 
 export const MeetingViewError = () => {
   return(
-    <ErrorState title="Error loading States" description="Something like went wrong."/>
+    <ErrorState title="Error loading meetings" description="Something went wrong."/>
   )
 }
