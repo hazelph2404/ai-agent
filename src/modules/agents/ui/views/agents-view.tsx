@@ -8,6 +8,8 @@ import EmptyState from '@/components/empty-state';
 import { useAgentsFilter } from '../../hooks/use-agents-filter';
 import { DataPagination } from '../components/data-pagination';
 import { useRouter } from "next/navigation";
+import LoadingState from '@/components/loading-state';
+import ErrorState from '@/components/error-state';
 
 
 const AgentsView = () => {
@@ -47,3 +49,15 @@ const AgentsView = () => {
 };
 
 export default AgentsView;
+
+export const LoadingAgent = () => {
+  return(
+    <LoadingState title="Loading States" description="This may take a few seconds"/>
+  )
+}
+
+export const AgentsViewError = () => {
+  return(
+    <ErrorState title="Error loading States" description="Something like went wrong."/>
+  )
+}
