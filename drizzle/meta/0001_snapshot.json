@@ -1,6 +1,6 @@
 {
-  "id": "d8d99e0e-3a8a-4ebd-809f-94ebe26b60d6",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "a41df411-ac6c-4ec7-a968-da640f000f7e",
+  "prevId": "d8d99e0e-3a8a-4ebd-809f-94ebe26b60d6",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -222,11 +222,16 @@
           "name": "started_at",
           "type": "timestamp",
           "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
+          "notNull": false
         },
         "ended_at": {
           "name": "ended_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
