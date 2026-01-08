@@ -3,68 +3,93 @@
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-
+import {
+  useMutation,
+  useQueryClient,
+  useSuspenseQuery,
+} from "@tanstack/react-query";
+import CommandSelect from "@/components/command-select";
 import { useTRPC } from "@/trpc/client";
-import GeneratedAvatar from "@/components/generated-avatar";
-
-import { agentsInsertSchema } from "../../schemas";
-import type { AgentGetOne } from "../../types";
-
 import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
+import { meetingsInsertSchema } from "@/modules/meetings/schemas";
+import { MeetingGetOne } from "@/modules/meetings/types";
+import { useState } from "react";
+import GeneratedAvatar from "@/components/generated-avatar";
+import NewAgentDialog from "@/modules/agents/ui/components/new-agent-dialog";
 
-type FormValues = z.infer<typeof agentsInsertSchema>;
+type FormValues = z.infer<typeof meetingsInsertSchema>;
 
-interface AgentFormProps {
-  onSuccess?: () => void;
+interface MeetingFormProps {
+  onSuccess?: (id: string) => void;
   onCancel?: () => void;
-  initialValues?: AgentGetOne;
+  initialValues?: MeetingGetOne;
   variant?: "dialog" | "page";
 }
 
-export const AgentForm = ({
+export const MeetingForm = ({
   onSuccess,
   onCancel,
   initialValues,
   variant = "page",
-}: AgentFormProps) => {
+}: MeetingFormProps) => {
+  const [openAgent, setOpenAgent] = useState(false);
+  const [agentSearch, setAgentSearch] = useState("");
   const trpc = useTRPC();
   const queryClient = useQueryClient();
+  const { data } = useSuspenseQuery(
+    trpc.agents.getMany.queryOptions({ pageSize: 100, search: agentSearch }),
+  );
+
+  const agents = data.items;
+  const agentOptions = agents.map((agent) => ({
+    id: agent.id,
+    value: agent.id,
+    children: (
+      <div className="flex items-center gap-x-2">
+        {" "}
+        <GeneratedAvatar
+          seed={agent.name}
+
+          className="border size-6"
+        />
+      </div>
+    ),
+  }));
 
   const isEdit = !!initialValues?.id;
   //initialValues exists → edit mode ; no initialValues → create mode
 
   const form = useForm<FormValues>({
-    resolver: zodResolver(agentsInsertSchema),
+    resolver: zodResolver(meetingsInsertSchema),
     defaultValues: {
       name: initialValues?.name ?? "",
-      instructions: initialValues?.instructions ?? "",
+      agentId: initialValues?.agentId ?? "",
     },
     mode: "onChange",
   });
 
-  const createAgent = useMutation(
-    trpc.agents.create.mutationOptions({
-      onSuccess: async () => {
+  const createMeeting = useMutation(
+    trpc.meetings.create.mutationOptions({
+      onSuccess: async (meeting) => {
         //TODO: invalidate for free tier users
         await queryClient.invalidateQueries(
-          trpc.agents.getMany.queryOptions({}),
+          trpc.meetings.getMany.queryOptions({}),
         );
 
-        onSuccess?.();
-        form.reset({ name: "", instructions: "" });
+        onSuccess?.(meeting.agentId);
+        form.reset({ name: "", agentId: "" });
       },
       onError: (error) => {
         toast.error(error.message);
@@ -72,76 +97,59 @@ export const AgentForm = ({
       },
     }),
   );
-  const updateAgent = useMutation(
-    trpc.agents.update.mutationOptions({
-      onSuccess: async () => {
+
+  const updateMeeting = useMutation(
+    trpc.meetings.update.mutationOptions({
+      onSuccess: async (meeting) => {
         await queryClient.invalidateQueries(
-          trpc.agents.getMany.queryOptions({}),
+          trpc.meetings.getMany.queryOptions({}),
         );
 
         if (initialValues?.id) {
           await queryClient.invalidateQueries(
-            trpc.agents.getOne.queryOptions({ id: initialValues.id }),
+            trpc.meetings.getOne.queryOptions({ id: initialValues.id }),
           );
         }
 
-        onSuccess?.();
-        form.reset({ name: "", instructions: "" });
+        onSuccess?.(meeting.id);
+        form.reset({ name: "", agentId: "" });
       },
       onError: (error) => {
         toast.error(error.message);
-
         //TODO: if error code is "FORBIDDEN", lead to /upgrade.
       },
     }),
   );
 
-  const isPending = createAgent.isPending || updateAgent.isPending;
+  const isPending = createMeeting.isPending || updateMeeting.isPending;
 
   const onSubmit = (values: FormValues) => {
     if (isEdit && initialValues?.id) {
-      updateAgent.mutate({ id: initialValues.id, ...values });
+      updateMeeting.mutate({ id: initialValues.id, ...values }); //there might be an error here?
       return;
     } else {
-      createAgent.mutate(values);
+      createMeeting.mutate(values);
     }
   };
 
   return (
+    <>
+    <NewAgentDialog open={openAgent} setOpenDialog={setOpenAgent} />
     <div className={variant === "page" ? "rounded-xl border p-6" : ""}>
-      {variant === "page" ? (
-        <>
-          <div className="mb-1 text-lg font-semibold">
-            {isEdit ? "Edit agent" : "Create a new agent"}
-          </div>
-          <div className="mb-6 text-sm text-muted-foreground">
-            Give your agent a clear name and instructions so it behaves
-            consistently in meetings.
-          </div>
-        </>
-      ) : null}
+
 
       {variant === "page" ? <Separator className="mb-6" /> : null}
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
-          <GeneratedAvatar
-            seed={form.watch("name") || "Agent"}
-            shape="circle"
-            className="border size-16"
-          />
-
           <FormField
             control={form.control}
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Agent name</FormLabel>
+                <FormLabel>Meeting name</FormLabel>
                 <FormControl>
-                  <Input
-                    placeholder="e.g. Meeting Notes Assistant"
-                    {...field}
-                  />
+                  <Input placeholder="e.g. Meeting name..." {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -150,17 +158,24 @@ export const AgentForm = ({
 
           <FormField
             control={form.control}
-            name="instructions"
+            name="agentId"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Instructions</FormLabel>
+                <FormLabel>Choosing Agent</FormLabel>
+
                 <FormControl>
-                  <Textarea
-                    placeholder="Describe what this agent should do in meetings. Tone, priorities, what to extract, what to avoid..."
-                    className="min-h-[140px] resize-none"
-                    {...field}
+                  <CommandSelect
+                    options={agentOptions ?? []}
+                    value={field.value}
+                    onSelect={(value) => field.onChange(value)}
+                    onSearch={setAgentSearch}
+                    placeholder="Select an agent"
                   />
                 </FormControl>
+                <FormDescription>
+                  Not found what you&apos;re looking for? {" "}
+                  <button type="button" className="text-primary hover:underline" onClick={() => setOpenAgent(true)}>{" "}Create a new agent </button>
+                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -185,17 +200,18 @@ export const AgentForm = ({
                 ? "Saving..."
                 : isEdit
                   ? "Save changes"
-                  : "Create agent"}
+                  : "Create meeting"}
             </Button>
           </div>
 
-          {createAgent.isError ? (
+          {createMeeting.isError ? (
             <p className="text-sm text-destructive">
-              Failed to create agent. Try again.
+              Failed to create meeting. Try again.
             </p>
           ) : null}
         </form>
       </Form>
     </div>
+    </>
   );
 };

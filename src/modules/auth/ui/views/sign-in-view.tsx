@@ -1,14 +1,14 @@
 "use client";
 import { useState } from "react";
 import { z } from "zod";
-import { useForm} from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { authClient } from "@/lib/auth-client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
 import { OctagonAlertIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertTitle } from "@/components/ui/alert";
-import {FaGithub, FaGoogle} from 'react-icons/fa';
+import { FaGithub, FaGoogle } from "react-icons/fa";
 import {
   Form,
   FormControl,
@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/form";
 import { Card, CardContent } from "@/components/ui/card";
 import Link from "next/link";
-import Image from 'next/image';
+import Image from "next/image";
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -27,9 +27,9 @@ const formSchema = z.object({
 });
 
 export const SignInView = () => {
-    const [error, setError] = useState<string | null>(null)
-    const [pending, setPending] = useState(false)
-    const form = useForm<z.infer<typeof formSchema>>({
+  const [error, setError] = useState<string | null>(null);
+  const [pending, setPending] = useState(false);
+  const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       email: "",
@@ -39,21 +39,22 @@ export const SignInView = () => {
   const onSubmit = (data: z.infer<typeof formSchema>) => {
     setError(null);
     setPending(true);
-    authClient.signIn.email({
-        email:data.email, 
-        password: data.password, 
-        callbackURL: "/"
-    },
-    {
-    onSuccess: () => {
-        setPending(false);
-    }, 
-    onError: ({error}) => {
-        setError(error.error.message ?? "An error occurred when signing in")
-    }
-    })
-
-  }
+    authClient.signIn.email(
+      {
+        email: data.email,
+        password: data.password,
+        callbackURL: "/",
+      },
+      {
+        onSuccess: () => {
+          setPending(false);
+        },
+        onError: ({ error }) => {
+          setError(error.error.message ?? "An error occurred when signing in");
+        },
+      },
+    );
+  };
   return (
     <div className="flex flex-col gap-5">
       <Card className="overflow-hidden p-0">
@@ -103,7 +104,6 @@ export const SignInView = () => {
                             placeholder="********"
                             {...field}
                           />
-                          
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -127,39 +127,68 @@ export const SignInView = () => {
                   </span>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
-                <Button onClick={() => {
-                  authClient.signIn.social({provider:'google', callbackURL: "/"})
-                }} disabled={pending} variant="outline" type="button" className="w-full">
-                  <FaGoogle/>
-                </Button>
-                <Button onClick={()=>{
-                  authClient.signIn.social({provider:'github', callbackURL: "/"})
-                }} disabled={pending} variant="outline" type="button" className="w-full">
-                  <FaGithub/>
-                </Button>
+                  <Button
+                    onClick={() => {
+                      authClient.signIn.social({
+                        provider: "google",
+                        callbackURL: "/",
+                      });
+                    }}
+                    disabled={pending}
+                    variant="outline"
+                    type="button"
+                    className="w-full"
+                  >
+                    <FaGoogle />
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      authClient.signIn.social({
+                        provider: "github",
+                        callbackURL: "/",
+                      });
+                    }}
+                    disabled={pending}
+                    variant="outline"
+                    type="button"
+                    className="w-full"
+                  >
+                    <FaGithub />
+                  </Button>
+                </div>
+                <div className="text-center text-sm">
+                  Don&apos;t have an account?
+                  <Link
+                    href="/sign-up"
+                    className="underline underline-offset-4"
+                  >
+                    {" "}
+                    Sign Up{" "}
+                  </Link>
+                </div>
               </div>
-              <div className="text-center text-sm">
-                Don&apos;t have an account?               
-                <Link href="/sign-up" className="underline underline-offset-4"> Sign Up </Link>
-              </div>
-
-              </div>
-
             </form>
           </Form>
 
           {/* RIGHT PANEL */}
           <div className="bg-radial from-sidebar-accent to-sidebar relative hidden md:flex flex-col gap-y-4 items-center justify-center">
-          <Image src="/logo.svg" alt="logo" width={90} height={90} className="text-[oklch(0.97_0.01_260)]"/>
+            <Image
+              src="/logo.svg"
+              alt="logo"
+              width={90}
+              height={90}
+              className="text-[oklch(0.97_0.01_260)]"
+            />
 
             <p> Meet.AI </p>
           </div>
         </CardContent>
       </Card>
 
-        <div className="text-muted-foreground *:[a]:hover:text-primary text-center text-xs text-balance *:[a]:underline *:[a]:underline-offset-4">
-                By clicking continue, you agree to our <a href="#"> Terms of service </a> and <a href="#"> Privacy Policy</a>
-        </div>
+      <div className="text-muted-foreground *:[a]:hover:text-primary text-center text-xs text-balance *:[a]:underline *:[a]:underline-offset-4">
+        By clicking continue, you agree to our{" "}
+        <a href="#"> Terms of service </a> and <a href="#"> Privacy Policy</a>
+      </div>
     </div>
   );
 };

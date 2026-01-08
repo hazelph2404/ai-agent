@@ -3,31 +3,34 @@
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { AgentForm } from "./agent-form";
+import { MeetingForm } from "./meeting-form";
+import { useRouter } from "next/navigation";
 
-export default function NewAgentDialog({
+export default function NewMeetingDialog({
   open,
   setOpenDialog,
 }: {
   open: boolean;
   setOpenDialog: (open: boolean) => void;
 }) {
+  const router = useRouter();
   return (
     <Dialog open={open} onOpenChange={setOpenDialog}>
       <DialogContent className="sm:max-w-[640px] p-6">
         <DialogHeader>
-          <DialogTitle>New Agent</DialogTitle>
-          <DialogDescription>Create a new agent</DialogDescription>
+          <DialogTitle>New Meeting</DialogTitle>
         </DialogHeader>
 
-        <AgentForm
+        <MeetingForm
           variant="dialog"
+          onSuccess={(meetingId) => {
+            setOpenDialog(false);
+            router.push(`/meetings/${meetingId}`);
+          }}
           onCancel={() => setOpenDialog(false)}
-          onSuccess={() => setOpenDialog(false)}
         />
       </DialogContent>
     </Dialog>

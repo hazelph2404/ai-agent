@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 type GeneratedAvatarProps = {
   seed: string;
   className?: string;
-  shape?: "square" | "circle";      // UI shape
+  shape?: "square" | "circle"; // UI shape
   size?: number;
   style?: Style<Record<string, unknown>>; // DiceBear style (initials, botttsNeutral, etc.)
   options?: Record<string, unknown>; // extra DiceBear options if you want
@@ -38,7 +38,7 @@ export default function GeneratedAvatar({
       height={size}
       className={cn(
         shape === "circle" ? "rounded-full" : "rounded-md",
-        className
+        className,
       )}
       unoptimized
     />

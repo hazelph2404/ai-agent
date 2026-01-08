@@ -51,7 +51,8 @@ export const columns: ColumnDef<AgentGetOne>[] = [
           >
             <VideoIcon />
             <span>
-            {row.original.meetingCount}{row.original.meetingCount === 1 ? " meeting" : " meetings"}
+              {row.original.meetingCount}
+              {row.original.meetingCount === 1 ? " meeting" : " meetings"}
             </span>
           </Badge>
         </div>

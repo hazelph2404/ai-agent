@@ -9,7 +9,7 @@ import { OctagonAlertIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertTitle } from "@/components/ui/alert";
 import { FaGithub, FaGoogle } from "react-icons/fa";
-import Image from 'next/image';
+import Image from "next/image";
 import {
   Form,
   FormControl,
@@ -67,7 +67,7 @@ export const SignUpView = () => {
         onFinally: () => {
           setPending(false);
         },
-      }
+      },
     );
   };
 
@@ -81,7 +81,7 @@ export const SignUpView = () => {
           setError(error.message ?? `Failed to sign in with ${provider}`);
           setPending(false);
         },
-      }
+      },
     );
   };
   return (
@@ -238,14 +238,21 @@ export const SignUpView = () => {
 
           {/* RIGHT PANEL */}
           <div className="bg-radial from-sidebar-accent to-sidebar relative hidden md:flex flex-col gap-y-4 items-center justify-center">
-          <Image src="/logo.svg" alt="logo" width={90} height={90} className="text-[oklch(0.97_0.01_260)]"/>
+            <Image
+              src="/logo.svg"
+              alt="logo"
+              width={90}
+              height={90}
+              className="text-[oklch(0.97_0.01_260)]"
+            />
           </div>
         </CardContent>
       </Card>
 
-        <div className="text-muted-foreground *:[a]:hover:text-primary text-center text-xs text-balance *:[a]:underline *:[a]:underline-offset-4">
-                By clicking continue, you agree to our <a href="#"> Terms of service </a> and <a href="#"> Privacy Policy</a>
-        </div>
+      <div className="text-muted-foreground *:[a]:hover:text-primary text-center text-xs text-balance *:[a]:underline *:[a]:underline-offset-4">
+        By clicking continue, you agree to our{" "}
+        <a href="#"> Terms of service </a> and <a href="#"> Privacy Policy</a>
+      </div>
     </div>
   );
 };
