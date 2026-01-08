@@ -12,7 +12,14 @@ import { agentsInsertSchema } from "../../schemas";
 import type { AgentGetOne } from "../../types";
 
 import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
@@ -48,12 +55,13 @@ export const AgentForm = ({
     mode: "onChange",
   });
 
-
   const createAgent = useMutation(
     trpc.agents.create.mutationOptions({
       onSuccess: async () => {
         //TODO: invalidate for free tier users
-        await queryClient.invalidateQueries(trpc.agents.getMany.queryOptions({}));
+        await queryClient.invalidateQueries(
+          trpc.agents.getMany.queryOptions({}),
+        );
 
         onSuccess?.();
         form.reset({ name: "", instructions: "" });
@@ -62,15 +70,19 @@ export const AgentForm = ({
         toast.error(error.message);
         // handled by createAgent.isError UI below
       },
-    })
+    }),
   );
   const updateAgent = useMutation(
     trpc.agents.update.mutationOptions({
       onSuccess: async () => {
-        await queryClient.invalidateQueries(trpc.agents.getMany.queryOptions({}));
+        await queryClient.invalidateQueries(
+          trpc.agents.getMany.queryOptions({}),
+        );
 
-        if(initialValues?.id){
-          await queryClient.invalidateQueries(trpc.agents.getOne.queryOptions({id: initialValues.id}))
+        if (initialValues?.id) {
+          await queryClient.invalidateQueries(
+            trpc.agents.getOne.queryOptions({ id: initialValues.id }),
+          );
         }
 
         onSuccess?.();
@@ -79,20 +91,19 @@ export const AgentForm = ({
       onError: (error) => {
         toast.error(error.message);
 
-        //TODO: if error code is "FORBIDDEN", lead to /upgrade. 
+        //TODO: if error code is "FORBIDDEN", lead to /upgrade.
       },
-    })
+    }),
   );
 
   const isPending = createAgent.isPending || updateAgent.isPending;
 
   const onSubmit = (values: FormValues) => {
     if (isEdit && initialValues?.id) {
-      updateAgent.mutate({id: initialValues.id, ...values})
+      updateAgent.mutate({ id: initialValues.id, ...values });
       return;
-    }
-    else{
-    createAgent.mutate(values);
+    } else {
+      createAgent.mutate(values);
     }
   };
 
@@ -104,7 +115,8 @@ export const AgentForm = ({
             {isEdit ? "Edit agent" : "Create a new agent"}
           </div>
           <div className="mb-6 text-sm text-muted-foreground">
-            Give your agent a clear name and instructions so it behaves consistently in meetings.
+            Give your agent a clear name and instructions so it behaves
+            consistently in meetings.
           </div>
         </>
       ) : null}
@@ -113,12 +125,11 @@ export const AgentForm = ({
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
-        <GeneratedAvatar
+          <GeneratedAvatar
             seed={form.watch("name") || "Agent"}
             shape="circle"
             className="border size-16"
-        />
-
+          />
 
           <FormField
             control={form.control}
@@ -127,7 +138,10 @@ export const AgentForm = ({
               <FormItem>
                 <FormLabel>Agent name</FormLabel>
                 <FormControl>
-                  <Input placeholder="e.g. Meeting Notes Assistant" {...field} />
+                  <Input
+                    placeholder="e.g. Meeting Notes Assistant"
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -152,21 +166,36 @@ export const AgentForm = ({
             )}
           />
 
-          <div className="flex items-center justify-end gap-2 pt-2">
-            { onCancel && (<Button type="button" variant="outline" onClick={onCancel} disabled={isPending}>
-              Cancel
-            </Button>)}
-            <Button type="submit" disabled={isPending || !form.formState.isValid}>
-              {isPending ? "Saving..." : isEdit ? "Save changes" : "Create agent"}
+          <div className="flex items-center justify-between gap-2 pt-2">
+            {onCancel && (
+              <Button
+                type="button"
+                variant="outline"
+                onClick={onCancel}
+                disabled={isPending}
+              >
+                Cancel
+              </Button>
+            )}
+            <Button
+              type="submit"
+              disabled={isPending || !form.formState.isValid}
+            >
+              {isPending
+                ? "Saving..."
+                : isEdit
+                  ? "Save changes"
+                  : "Create agent"}
             </Button>
           </div>
 
           {createAgent.isError ? (
-            <p className="text-sm text-destructive">Failed to create agent. Try again.</p>
+            <p className="text-sm text-destructive">
+              Failed to create agent. Try again.
+            </p>
           ) : null}
         </form>
       </Form>
     </div>
   );
 };
-

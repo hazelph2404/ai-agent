@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import {TRPCReactProvider} from '@/trpc/client';
+import { TRPCReactProvider } from "@/trpc/client";
 import { Inter } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
-import {NuqsAdapter} from 'nuqs/adapters/next';
+import { NuqsAdapter } from "nuqs/adapters/next";
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
@@ -21,16 +21,14 @@ export default function RootLayout({
 }) {
   return (
     <NuqsAdapter>
-    <TRPCReactProvider>
-    <html lang="en" className={inter.variable}>
-      <body className="antialiased">
-
-          {children}
-          <Toaster/>
-        
-      </body>
-    </html>
-    </TRPCReactProvider>
+      <TRPCReactProvider>
+        <html lang="en" className={inter.variable}>
+          <body className="antialiased">
+            {children}
+            <Toaster />
+          </body>
+        </html>
+      </TRPCReactProvider>
     </NuqsAdapter>
   );
 }

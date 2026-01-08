@@ -1,18 +1,24 @@
 "use client";
 
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { AgentForm } from "./agent-form";
 import { AgentGetOne } from "../../types";
-interface UpdateAgentDialog{
-    open:boolean,
-    onOpenChange: (open:boolean) => void;
-    initialValues: AgentGetOne;
+interface UpdateAgentDialog {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  initialValues: AgentGetOne;
 }
 export default function UpdateAgentDialog({
   open,
   onOpenChange,
-  initialValues
-}:UpdateAgentDialog) {
+  initialValues,
+}: UpdateAgentDialog) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[640px] p-6">

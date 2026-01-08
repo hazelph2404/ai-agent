@@ -11,15 +11,15 @@ import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { SearchParams } from "nuqs";
 import { loadSearchParams } from "@/modules/agents/params";
-interface Props  {
-    searchParams: Promise<SearchParams>
+interface Props {
+  searchParams: Promise<SearchParams>;
 }
-const Page = async ({searchParams}:Props) => {
+const Page = async ({ searchParams }: Props) => {
   const filters = await loadSearchParams(searchParams);
   const requestHeaders = await headers();
 
   const session = await auth.api.getSession({
-      headers: requestHeaders,
+    headers: requestHeaders,
   });
 
   if (!session) {
@@ -27,13 +27,13 @@ const Page = async ({searchParams}:Props) => {
   }
 
   const queryClient = getQueryClient({
-    headers: requestHeaders, 
+    headers: requestHeaders,
   });
 
   await queryClient.prefetchQuery(
     trpc.agents.getMany.queryOptions({
-      ...filters
-    })
+      ...filters,
+    }),
   );
 
   return (
@@ -50,10 +50,7 @@ const Page = async ({searchParams}:Props) => {
         >
           <ErrorBoundary
             fallback={
-              <ErrorState
-                title="Error"
-                description="Cannot load agents"
-              />
+              <ErrorState title="Error" description="Cannot load agents" />
             }
           >
             <AgentsView />

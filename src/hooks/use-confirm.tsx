@@ -4,9 +4,8 @@ import { CommandResponsiveDialog } from "@/components/ui/command";
 
 export const useConfirm = (
   title: string,
-  description: string
+  description: string,
 ): [() => JSX.Element, () => Promise<boolean>] => {
-  
   const [promise, setPromise] = useState<{
     resolve: (value: boolean) => void;
   } | null>(null);
@@ -33,7 +32,8 @@ export const useConfirm = (
       open={!!promise}
       onOpenChange={handleClose}
       title={title}
-      description={description}>
+      description={description}
+    >
       <div className="px-6 pt-6 space-y-2">
         <h3 className="text-lg font-semibold">{title}</h3>
         <p className="text-sm text-muted-foreground">{description}</p>
@@ -42,9 +42,7 @@ export const useConfirm = (
         <Button variant="outline" onClick={handleClose}>
           Cancel
         </Button>
-        <Button onClick={handleConfirm}>
-          Confirm
-        </Button>
+        <Button onClick={handleConfirm}>Confirm</Button>
       </div>
     </CommandResponsiveDialog>
   );

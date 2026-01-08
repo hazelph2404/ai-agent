@@ -1,4 +1,4 @@
-import { AlertCircle } from 'lucide-react';
+import { AlertCircle } from "lucide-react";
 
 interface Props {
   title: string;
@@ -13,9 +13,7 @@ const ErrorState = ({ title, description }: Props) => {
 
         <div className="flex flex-col gap-y-1">
           <h6 className="text-base font-semibold">{title}</h6>
-          <p className="text-sm text-muted-foreground">
-            {description}
-          </p>
+          <p className="text-sm text-muted-foreground">{description}</p>
         </div>
       </div>
     </div>
