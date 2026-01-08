@@ -60,16 +60,20 @@ const CommandSelect = ({
         <ChevronsUpDownIcon className="h-4 w-4 opacity-50" />
       </Button>
 
-      <CommandResponsiveDialog shouldFilter={!onSearch} open={open} onOpenChange={setOpen}>
+      <CommandResponsiveDialog
+        shouldFilter={!onSearch}
+        open={open}
+        onOpenChange={setOpen}
+      >
         {isSearchable && (
-          <CommandInput
-            placeholder="Search..."
-            onValueChange={onSearch}
-          />
+          <CommandInput placeholder="Search..." onValueChange={onSearch} />
         )}
 
         <CommandList>
-          <CommandEmpty> <span className="text-muted-foreground">No results found. </span></CommandEmpty>
+          <CommandEmpty>
+            {" "}
+            <span className="text-muted-foreground">No results found. </span>
+          </CommandEmpty>
 
           {options.map((option) => (
             <CommandItem

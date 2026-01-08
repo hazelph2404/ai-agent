@@ -56,7 +56,7 @@ export const DashboardUserButton = () => {
               <GeneratedAvatar seed={seed} className="size-8" />
             )}
 
-            <div className="flex flex-col gap-0.10 text-left overflow-hidden flex-1 min-w-0">
+            <div className="flex flex-col gap-0.5 text-left overflow-hidden flex-1 min-w-0">
               <p className="truncate">{name}</p>
               <p className="text-xs text-muted-foreground truncate">{email}</p>
             </div>
@@ -104,7 +104,7 @@ export const DashboardUserButton = () => {
               <GeneratedAvatar seed={seed} className="size-8" />
             )}
 
-            <div className="flex flex-col gap-0.10 text-left overflow-hidden flex-1 min-w-0">
+            <div className="flex flex-col gap-0.5 text-left overflow-hidden flex-1 min-w-0">
               <p className="truncate">{name}</p>
               <p className="text-xs text-muted-foreground truncate">{email}</p>
             </div>

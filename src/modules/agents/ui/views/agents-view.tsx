@@ -55,7 +55,7 @@ export default AgentsView;
 export const LoadingAgent = () => {
   return (
     <LoadingState
-      title="Loading States"
+      title="Loading agents"
       description="This may take a few seconds"
     />
   );
@@ -64,8 +64,8 @@ export const LoadingAgent = () => {
 export const AgentsViewError = () => {
   return (
     <ErrorState
-      title="Error loading States"
-      description="Something like went wrong."
+      title="Error loading agents"
+      description="Something went wrong."
     />
   );
 };

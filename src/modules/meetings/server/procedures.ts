@@ -1,7 +1,7 @@
 import { createTRPCRouter, protectedProcedure } from "@/trpc/init";
 import { db } from "@/db";
 import { meetings, agents } from "@/db/schema";
-import { and, count, desc, eq, ilike, sql } from "drizzle-orm";
+import { and, count, eq, ilike, sql } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { MIN_PAGE_SIZE, MAX_PAGE_SIZE, DEFAULT_PAGE_SIZE } from "@/constants";
@@ -89,7 +89,7 @@ export const meetingsRouter = createTRPCRouter({
         .from(meetings)
         .leftJoin(agents, eq(meetings.agentId, agents.id))
         .where(whereClause)
-        .orderBy(desc(meetings.startedAt))
+        .orderBy(sql`${meetings.startedAt} DESC NULLS LAST`)
         .limit(pageSize)
         .offset((page - 1) * pageSize);
 

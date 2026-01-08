@@ -59,11 +59,8 @@ export const MeetingForm = ({
     children: (
       <div className="flex items-center gap-x-2">
         {" "}
-        <GeneratedAvatar
-          seed={agent.name}
-
-          className="border size-6"
-        />
+        <GeneratedAvatar seed={agent.name} className="border size-6" />
+        <span>{agent.name}</span>
       </div>
     ),
   }));
@@ -88,7 +85,7 @@ export const MeetingForm = ({
           trpc.meetings.getMany.queryOptions({}),
         );
 
-        onSuccess?.(meeting.agentId);
+        onSuccess?.(meeting.id);
         form.reset({ name: "", agentId: "" });
       },
       onError: (error) => {
@@ -125,7 +122,7 @@ export const MeetingForm = ({
 
   const onSubmit = (values: FormValues) => {
     if (isEdit && initialValues?.id) {
-      updateMeeting.mutate({ id: initialValues.id, ...values }); //there might be an error here?
+      updateMeeting.mutate({ id: initialValues.id, ...values });
       return;
     } else {
       createMeeting.mutate(values);
@@ -134,84 +131,89 @@ export const MeetingForm = ({
 
   return (
     <>
-    <NewAgentDialog open={openAgent} setOpenDialog={setOpenAgent} />
-    <div className={variant === "page" ? "rounded-xl border p-6" : ""}>
+      <NewAgentDialog open={openAgent} setOpenDialog={setOpenAgent} />
+      <div className={variant === "page" ? "rounded-xl border p-6" : ""}>
+        {variant === "page" ? <Separator className="mb-6" /> : null}
 
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Meeting name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="e.g. Meeting name..." {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-      {variant === "page" ? <Separator className="mb-6" /> : null}
+            <FormField
+              control={form.control}
+              name="agentId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Choosing Agent</FormLabel>
 
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
-          <FormField
-            control={form.control}
-            name="name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Meeting name</FormLabel>
-                <FormControl>
-                  <Input placeholder="e.g. Meeting name..." {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+                  <FormControl>
+                    <CommandSelect
+                      options={agentOptions ?? []}
+                      value={field.value}
+                      onSelect={(value) => field.onChange(value)}
+                      onSearch={setAgentSearch}
+                      placeholder="Select an agent"
+                    />
+                  </FormControl>
+                  <FormDescription>
+                    Not found what you&apos;re looking for?{" "}
+                    <button
+                      type="button"
+                      className="text-primary hover:underline"
+                      onClick={() => setOpenAgent(true)}
+                    >
+                      {" "}
+                      Create a new agent{" "}
+                    </button>
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          <FormField
-            control={form.control}
-            name="agentId"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Choosing Agent</FormLabel>
-
-                <FormControl>
-                  <CommandSelect
-                    options={agentOptions ?? []}
-                    value={field.value}
-                    onSelect={(value) => field.onChange(value)}
-                    onSearch={setAgentSearch}
-                    placeholder="Select an agent"
-                  />
-                </FormControl>
-                <FormDescription>
-                  Not found what you&apos;re looking for? {" "}
-                  <button type="button" className="text-primary hover:underline" onClick={() => setOpenAgent(true)}>{" "}Create a new agent </button>
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <div className="flex items-center justify-between gap-2 pt-2">
-            {onCancel && (
+            <div className="flex items-center justify-between gap-2 pt-2">
+              {onCancel && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={onCancel}
+                  disabled={isPending}
+                >
+                  Cancel
+                </Button>
+              )}
               <Button
-                type="button"
-                variant="outline"
-                onClick={onCancel}
-                disabled={isPending}
+                type="submit"
+                disabled={isPending || !form.formState.isValid}
               >
-                Cancel
+                {isPending
+                  ? "Saving..."
+                  : isEdit
+                    ? "Save changes"
+                    : "Create meeting"}
               </Button>
-            )}
-            <Button
-              type="submit"
-              disabled={isPending || !form.formState.isValid}
-            >
-              {isPending
-                ? "Saving..."
-                : isEdit
-                  ? "Save changes"
-                  : "Create meeting"}
-            </Button>
-          </div>
+            </div>
 
-          {createMeeting.isError ? (
-            <p className="text-sm text-destructive">
-              Failed to create meeting. Try again.
-            </p>
-          ) : null}
-        </form>
-      </Form>
-    </div>
+            {createMeeting.isError ? (
+              <p className="text-sm text-destructive">
+                Failed to create meeting. Try again.
+              </p>
+            ) : null}
+          </form>
+        </Form>
+      </div>
     </>
   );
 };

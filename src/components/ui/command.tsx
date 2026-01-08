@@ -43,7 +43,7 @@ type CommandResponsiveDialogProps = React.ComponentProps<typeof Dialog> & {
   contentClassName?: string; // preferred: padding overrides
   showCloseButton?: boolean;
   children?: React.ReactNode;
-  shouldFilter?:boolean,
+  shouldFilter?: boolean;
 };
 
 function CommandResponsiveDialog({
@@ -53,7 +53,7 @@ function CommandResponsiveDialog({
   className,
   contentClassName,
   showCloseButton = true,
-  shouldFilter=true,
+  shouldFilter = true,
   ...props
 }: CommandResponsiveDialogProps) {
   const isMobile = useIsMobile();
@@ -80,7 +80,9 @@ function CommandResponsiveDialog({
             ) : null}
           </DrawerHeader>
 
-          <Command shouldFilter={shouldFilter} className={commandShellClass}>{children}</Command>
+          <Command shouldFilter={shouldFilter} className={commandShellClass}>
+            {children}
+          </Command>
         </DrawerContent>
       </Drawer>
     );
@@ -98,7 +100,9 @@ function CommandResponsiveDialog({
             <DialogDescription>{description}</DialogDescription>
           ) : null}
         </DialogHeader>
-        <Command shouldFilter={shouldFilter} className={commandShellClass}>{children}</Command>
+        <Command shouldFilter={shouldFilter} className={commandShellClass}>
+          {children}
+        </Command>
       </DialogContent>
     </Dialog>
   );

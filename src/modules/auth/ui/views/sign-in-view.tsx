@@ -50,6 +50,7 @@ export const SignInView = () => {
           setPending(false);
         },
         onError: ({ error }) => {
+          setPending(false);
           setError(error.error.message ?? "An error occurred when signing in");
         },
       },
