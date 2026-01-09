@@ -1,7 +1,7 @@
 import { createTRPCRouter, protectedProcedure } from "@/trpc/init";
 import { db } from "@/db";
 import { meetings, agents } from "@/db/schema";
-import { and, count, eq, ilike, sql } from "drizzle-orm";
+import { and, count, eq, getTableColumns, ilike, sql } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { MIN_PAGE_SIZE, MAX_PAGE_SIZE, DEFAULT_PAGE_SIZE } from "@/constants";
@@ -73,21 +73,9 @@ export const meetingsRouter = createTRPCRouter({
       );
 
       const items = await db
-        .select({
-          id: meetings.id,
-          name: meetings.name,
-          userId: meetings.userId,
-          agentId: meetings.agentId,
-          status: meetings.status,
-          startedAt: meetings.startedAt,
-          endedAt: meetings.endedAt,
-          transcriptUrl: meetings.transcriptUrl,
-          recordingUrl: meetings.recordingUrl,
-          summary: meetings.summary,
-          agentName: agents.name,
-        })
+        .select({...getTableColumns(meetings), agent:agents, duration:sql<number>`EXTRACT(EPOCH FROM (ended_at - started_at))`.as("duration"),})
         .from(meetings)
-        .leftJoin(agents, eq(meetings.agentId, agents.id))
+        .innerJoin(agents, eq(meetings.agentId, agents.id))
         .where(whereClause)
         .orderBy(sql`${meetings.startedAt} DESC NULLS LAST`)
         .limit(pageSize)

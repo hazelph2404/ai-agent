@@ -128,17 +128,21 @@ const AgentIdView = ({ agentId, onSuccess }: Props) => {
 /* States */
 
 const AgentLoadingState = () => (
+  <div className="min-h-screen flex items-center justify-center">
   <LoadingState
     title="Loading agent"
     description="This may take a few seconds..."
   />
+  </div>
 );
 
 const AgentErrorState = () => (
+  <div className="min-h-screen flex items-center justify-center">
   <ErrorState
     title="Error"
     description="Agent does not exist or you don’t have access."
   />
+  </div>
 );
 
 export { AgentIdView, AgentLoadingState, AgentErrorState };
