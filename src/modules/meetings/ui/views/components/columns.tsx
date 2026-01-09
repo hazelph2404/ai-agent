@@ -45,6 +45,11 @@ const STATUS_CONFIG = {
     icon: CircleXIcon,
     variant: "destructive",
   },
+    active: {
+    label: "Active",
+      icon: LoaderIcon,
+     variant: "default",
+     },
 } as const;
 
 

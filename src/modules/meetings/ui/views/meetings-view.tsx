@@ -15,7 +15,12 @@ const MeetingView = () => {
   const trpc = useTRPC();
   const router = useRouter();
   const [filters, setFilters] = useMeetingsFilter();
-  const { data } = useSuspenseQuery(trpc.meetings.getMany.queryOptions({}));
+    const { data } = useSuspenseQuery(
+        trpc.meetings.getMany.queryOptions({
+          page: filters.page,
+          search: filters.search,
+        })
+  );
   if (!data) return null;
   const hasData = data.items.length > 0;
   
@@ -24,7 +29,7 @@ const MeetingView = () => {
       <DataTable
         columns={columns}
         data={data.items}
-        onRowClick={(row) => router.push(`/agents/${row.id}`)}/>
+        onRowClick={(row) => router.push(`/meetings/${row.id}`)}/>
 
       {!hasData ? (
         <EmptyState
