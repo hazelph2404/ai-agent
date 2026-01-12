@@ -9,7 +9,6 @@ import StatusFilter from "./status-filter";
 import AgentIdFilter from "./agent-id-filter";
 import { useMeetingsFilter } from "@/modules/meetings/hooks/use-meetings-filter";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { DEFAULT_PAGE_SIZE } from "@/constants";
 
 const MeetingsListHeader = () => {
   const [open, setOpenDialog] = useState(false);
@@ -17,7 +16,7 @@ const MeetingsListHeader = () => {
   const onClearFilters = () => {
     setFilters(() => ({
       search: null,
-      page: DEFAULT_PAGE_SIZE,
+      page: null,
       status: null,
       agentId: null,
     }));
@@ -26,12 +25,12 @@ const MeetingsListHeader = () => {
   const edited =
     filters.search !== "" ||
     filters.page !== 1 ||
-    filters.status !== undefined ||
+    filters.status !== "upcoming" ||
     filters.agentId !== "";
 
   return (
     <>
-      {/* Luôn render để giữ Animation, Dialog nội bộ sẽ xử lý logic hiển thị dựa trên 'open' */}
+
       <NewMeetingDialog open={open} setOpenDialog={setOpenDialog} />
 
       <div className="px-4 py-4 md:px-8 space-y-4">
