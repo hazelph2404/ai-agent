@@ -15,7 +15,6 @@ import {
   LoaderIcon,
 } from "lucide-react";
 
-
 function formatDuration(seconds: number) {
   return humanizeDuration(seconds * 1000, {
     largest: 1,
@@ -45,13 +44,12 @@ const STATUS_CONFIG = {
     icon: CircleXIcon,
     variant: "destructive",
   },
-    active: {
+  active: {
     label: "Active",
-      icon: LoaderIcon,
-     variant: "default",
-     },
+    icon: LoaderIcon,
+    variant: "default",
+  },
 } as const;
-
 
 export const columns: ColumnDef<MeetingGetMany[number]>[] = [
   {
@@ -112,9 +110,7 @@ export const columns: ColumnDef<MeetingGetMany[number]>[] = [
 
       return (
         <span className="text-sm text-muted-foreground">
-          {startedAt
-            ? format(new Date(startedAt), "MMM d, yyyy · HH:mm")
-            : "—"}
+          {startedAt ? format(new Date(startedAt), "MMM d, yyyy · HH:mm") : "—"}
         </span>
       );
     },
@@ -130,11 +126,7 @@ export const columns: ColumnDef<MeetingGetMany[number]>[] = [
         return <span className="text-muted-foreground">—</span>;
       }
 
-      return (
-        <span className="text-sm">
-          {formatDuration(duration)}
-        </span>
-      );
+      return <span className="text-sm">{formatDuration(duration)}</span>;
     },
   },
 ];
