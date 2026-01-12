@@ -10,8 +10,13 @@ import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import MeetingsListHeader from "@/modules/meetings/ui/views/components/meetings-list-header";
-
-const Page = async () => {
+import { loadSearchParams } from "@/modules/meetings/params";
+import { SearchParams } from "nuqs";
+interface Props {
+  searchParams: Promise<SearchParams>;
+}
+const Page = async ({searchParams}: Props) => {
+  const filters = await loadSearchParams(searchParams);
   const requestHeaders = await headers();
   const session = await auth.api.getSession({
     headers: requestHeaders,
@@ -24,8 +29,9 @@ const Page = async () => {
   const queryClient = getQueryClient({
     headers: requestHeaders,
   });
+
   // for PREMIUM user experiences: load the data in server first instead of making user wait
-  await queryClient.prefetchQuery(trpc.meetings.getMany.queryOptions({}));
+  await queryClient.prefetchQuery(trpc.meetings.getMany.queryOptions({...filters}));
   return (
     <>
       <MeetingsListHeader />

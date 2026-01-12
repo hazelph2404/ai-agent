@@ -11,15 +11,14 @@ import { useRouter } from "next/navigation";
 import EmptyState from "@/components/empty-state";
 import { DataPagination } from "./components/data-pagination";
 import { useMeetingsFilter } from "../../hooks/use-meetings-filter";
+
 const MeetingView = () => {
   const trpc = useTRPC();
   const router = useRouter();
   const [filters, setFilters] = useMeetingsFilter();
-    const { data } = useSuspenseQuery(
-        trpc.meetings.getMany.queryOptions({
-          page: filters.page,
-          search: filters.search,
-        })
+
+  const { data } = useSuspenseQuery(
+    trpc.meetings.getMany.queryOptions({...filters})
   );
   if (!data) return null;
   const hasData = data.items.length > 0;

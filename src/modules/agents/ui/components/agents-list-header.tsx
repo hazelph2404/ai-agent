@@ -6,6 +6,8 @@ import { PlusIcon, XCircleIcon } from "lucide-react";
 import NewAgentDialog from "./new-agent-dialog";
 import { useAgentsFilter } from "../../hooks/use-agents-filter";
 import AgentsSearchFilter from "./agents-search-filter";
+import { ScrollArea } from "@radix-ui/react-scroll-area";
+import { ScrollBar } from "@/components/ui/scroll-area";
 
 const AgentsListHeader = () => {
   const [searchValue, setSearchValue] = useAgentsFilter();
@@ -32,7 +34,7 @@ const AgentsListHeader = () => {
             New Agent
           </Button>
         </div>
-
+        <ScrollArea>
         <div className="flex items-center gap-2">
           <AgentsSearchFilter />
 
@@ -48,6 +50,8 @@ const AgentsListHeader = () => {
             </Button>
           )}
         </div>
+        <ScrollBar orient="horizontal"/>
+        </ScrollArea>
       </div>
     </>
   );
