@@ -10,7 +10,7 @@ const MeetingSearchFilter = () => {
         value={filter.search}
         placeholder="Enter meeting..."
         className="pl-7"
-        onChange={(e) => setFilter({ search: e.target.value })}
+        onChange={(e) => setFilter({ search: e.target.value, page:1 })}
       />
     </div>
   );

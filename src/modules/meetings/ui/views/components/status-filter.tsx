@@ -45,7 +45,7 @@ const StatusFilter = () => {
   const [filter, setFilter] = useMeetingsFilter();
   const handleSelect = (value: string) => {
     const newStatus = value === "" ? undefined : (value as MeetingStatus);
-    setFilter({ status: newStatus });
+    setFilter({ status: newStatus, page:1 });
   };
 
   const options = STATUS_OPTIONS.map((status) => ({
