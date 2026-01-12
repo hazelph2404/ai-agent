@@ -41,10 +41,10 @@ const CommandSelect = ({
   const [open, setOpen] = useState(false);
 
   const selectedOption = options.find((option) => option.value === value);
-  const handleOpenChange = (open:boolean) => {
+  const handleOpenChange = (open: boolean) => {
     onSearch?.("");
     setOpen(open);
-  }
+  };
   return (
     <>
       <Button

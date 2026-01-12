@@ -35,22 +35,22 @@ const AgentsListHeader = () => {
           </Button>
         </div>
         <ScrollArea>
-        <div className="flex items-center gap-2">
-          <AgentsSearchFilter />
+          <div className="flex items-center gap-2">
+            <AgentsSearchFilter />
 
-          {isAnyFilterModified && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={onClearFilters}
-              className="text-muted-foreground"
-            >
-              <XCircleIcon className="mr-1 size-4" />
-              Clear
-            </Button>
-          )}
-        </div>
-        <ScrollBar orient="horizontal"/>
+            {isAnyFilterModified && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={onClearFilters}
+                className="text-muted-foreground"
+              >
+                <XCircleIcon className="mr-1 size-4" />
+                Clear
+              </Button>
+            )}
+          </div>
+          <ScrollBar orientation="horizontal" />
         </ScrollArea>
       </div>
     </>

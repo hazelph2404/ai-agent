@@ -15,7 +15,7 @@ import { SearchParams } from "nuqs";
 interface Props {
   searchParams: Promise<SearchParams>;
 }
-const Page = async ({searchParams}: Props) => {
+const Page = async ({ searchParams }: Props) => {
   const filters = await loadSearchParams(searchParams);
   const requestHeaders = await headers();
   const session = await auth.api.getSession({
@@ -31,7 +31,9 @@ const Page = async ({searchParams}: Props) => {
   });
 
   // for PREMIUM user experiences: load the data in server first instead of making user wait
-  await queryClient.prefetchQuery(trpc.meetings.getMany.queryOptions({...filters}));
+  await queryClient.prefetchQuery(
+    trpc.meetings.getMany.queryOptions({ ...filters }),
+  );
   return (
     <>
       <MeetingsListHeader />

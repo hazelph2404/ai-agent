@@ -1,9 +1,16 @@
-import { createLoader, parseAsInteger,parseAsStringEnum, parseAsString } from "nuqs/server";
+import {
+  createLoader,
+  parseAsInteger,
+  parseAsStringEnum,
+  parseAsString,
+} from "nuqs/server";
 import { MEETING_STATUSES } from "./schemas";
 export const filteredSearchParams = {
   search: parseAsString.withDefault("").withOptions({ clearOnDefault: true }),
   page: parseAsInteger.withDefault(1).withOptions({ clearOnDefault: true }),
-  status: parseAsStringEnum([...MEETING_STATUSES]).withOptions({ clearOnDefault: true }),
+  status: parseAsStringEnum([...MEETING_STATUSES]).withOptions({
+    clearOnDefault: true,
+  }),
   agentId: parseAsString.withDefault("").withOptions({ clearOnDefault: true }),
 };
 

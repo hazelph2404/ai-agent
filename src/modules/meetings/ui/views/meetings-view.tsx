@@ -18,17 +18,18 @@ const MeetingView = () => {
   const [filters, setFilters] = useMeetingsFilter();
 
   const { data } = useSuspenseQuery(
-    trpc.meetings.getMany.queryOptions({...filters})
+    trpc.meetings.getMany.queryOptions({ ...filters }),
   );
   if (!data) return null;
   const hasData = data.items.length > 0;
-  
+
   return (
     <div className="px-6 py-3 justify-center">
       <DataTable
         columns={columns}
         data={data.items}
-        onRowClick={(row) => router.push(`/meetings/${row.id}`)}/>
+        onRowClick={(row) => router.push(`/meetings/${row.id}`)}
+      />
 
       {!hasData ? (
         <EmptyState
@@ -48,5 +49,19 @@ const MeetingView = () => {
 
 export default MeetingView;
 
-export const LoadingMeeting = () => { return ( <LoadingState title="Loading meetings" description="This may take a few seconds" /> ); }; 
-export const MeetingViewError = () => { return ( <ErrorState title="Error loading meetings" description="Something went wrong." /> ); };
+export const LoadingMeeting = () => {
+  return (
+    <LoadingState
+      title="Loading meetings"
+      description="This may take a few seconds"
+    />
+  );
+};
+export const MeetingViewError = () => {
+  return (
+    <ErrorState
+      title="Error loading meetings"
+      description="Something went wrong."
+    />
+  );
+};

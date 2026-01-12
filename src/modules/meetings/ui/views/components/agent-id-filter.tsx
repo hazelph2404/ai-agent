@@ -13,7 +13,7 @@ const AgentIdFilter = () => {
     trpc.agents.getMany.queryOptions({
       pageSize: 100,
       search: agentSearch,
-    })
+    }),
   );
   const handleSelect = (value: string) => {
     setFilter({
@@ -21,25 +21,25 @@ const AgentIdFilter = () => {
     });
   };
   const options =
-  data?.items.map((agent) => ({
-    id: agent.id,
-    value: agent.id,
-    children: (
-      <div className="flex items-center gap-x-3 w-full px-2 py-1.5 transition-colors">
-        <div className="flex-shrink-0">
-          <GeneratedAvatar
-            seed={agent.name}
-            style={botttsNeutral}
-            shape="circle"
-            className="size-6 border shadow-sm"
-          />
+    data?.items.map((agent) => ({
+      id: agent.id,
+      value: agent.id,
+      children: (
+        <div className="flex items-center gap-x-3 w-full px-2 py-1.5 transition-colors">
+          <div className="flex-shrink-0">
+            <GeneratedAvatar
+              seed={agent.name}
+              style={botttsNeutral}
+              shape="circle"
+              className="size-6 border shadow-sm"
+            />
+          </div>
+          <span className="text-sm font-medium text-slate-700 truncate">
+            {agent.name}
+          </span>
         </div>
-        <span className="text-sm font-medium text-slate-700 truncate">
-          {agent.name}
-        </span>
-      </div>
-    ),
-  })) ?? [];
+      ),
+    })) ?? [];
   return (
     <div className="w-[220px]">
       <CommandSelect
