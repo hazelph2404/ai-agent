@@ -156,6 +156,12 @@ export const meetingsRouter = createTRPCRouter({
         .select()
         .from(meetings)
         .where(and(eq(meetings.id, id), eq(meetings.userId, ctx.auth.user.id)));
+      if (!existing) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Meeting not found!",
+        });
+      }
       return existing;
     }
     const [updated] = await db
