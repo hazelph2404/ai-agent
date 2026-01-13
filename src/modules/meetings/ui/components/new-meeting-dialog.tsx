@@ -17,8 +17,8 @@ export default function NewMeetingDialog({
     <CommandResponsiveDialog
     open={open} 
     onOpenChange={setOpenDialog}
-    title="Edit Meeting"
-    description="Edit the meeting details"
+    title="New Meeting"
+    description="Create a new meeting"
   >
     <div className="px-6 pt-6 py-6 space-y-2">
         <MeetingForm
