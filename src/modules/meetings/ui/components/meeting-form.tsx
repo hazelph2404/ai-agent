@@ -84,7 +84,7 @@ export const MeetingForm = ({
       name: initialValues.name ?? "",
       agentId: initialValues.agentId ?? "",
     });
-  }, [initialValues?.id]);
+  }, [initialValues?.id, form]);
 
   const createMeeting = useMutation(
     trpc.meetings.create.mutationOptions({
