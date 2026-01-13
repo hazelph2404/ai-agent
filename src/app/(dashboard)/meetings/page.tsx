@@ -9,7 +9,7 @@ import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
-import MeetingsListHeader from "@/modules/meetings/ui/views/components/meetings-list-header";
+import MeetingsListHeader from "@/modules/meetings/ui/components/meetings-list-header";
 import { loadSearchParams } from "@/modules/meetings/params";
 import { SearchParams } from "nuqs";
 interface Props {

@@ -1,13 +1,8 @@
 "use client";
 
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import { MeetingForm } from "./meeting-form";
 import { useRouter } from "next/navigation";
+import { CommandResponsiveDialog } from "@/components/ui/command";
 
 export default function NewMeetingDialog({
   open,
@@ -18,12 +13,14 @@ export default function NewMeetingDialog({
 }) {
   const router = useRouter();
   return (
-    <Dialog open={open} onOpenChange={setOpenDialog}>
-      <DialogContent className="sm:max-w-[640px] p-6">
-        <DialogHeader>
-          <DialogTitle>New Meeting</DialogTitle>
-        </DialogHeader>
 
+    <CommandResponsiveDialog
+    open={open} 
+    onOpenChange={setOpenDialog}
+    title="Edit Meeting"
+    description="Edit the meeting details"
+  >
+    <div className="px-6 pt-6 py-6 space-y-2">
         <MeetingForm
           variant="dialog"
           onSuccess={(meetingId) => {
@@ -32,7 +29,7 @@ export default function NewMeetingDialog({
           }}
           onCancel={() => setOpenDialog(false)}
         />
-      </DialogContent>
-    </Dialog>
+      </div>
+    </CommandResponsiveDialog>
   );
 }

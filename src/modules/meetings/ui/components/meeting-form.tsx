@@ -1,5 +1,5 @@
 "use client";
-
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -77,6 +77,15 @@ export const MeetingForm = ({
     mode: "onChange",
   });
 
+  useEffect(() => {
+    if (!initialValues) return;
+  
+    form.reset({
+      name: initialValues.name ?? "",
+      agentId: initialValues.agentId ?? "",
+    });
+  }, [initialValues?.id]);
+
   const createMeeting = useMutation(
     trpc.meetings.create.mutationOptions({
       onSuccess: async (meeting) => {
@@ -109,7 +118,7 @@ export const MeetingForm = ({
         }
 
         onSuccess?.(meeting.id);
-        form.reset({ name: "", agentId: "" });
+
       },
       onError: (error) => {
         toast.error(error.message);
@@ -121,6 +130,7 @@ export const MeetingForm = ({
   const isPending = createMeeting.isPending || updateMeeting.isPending;
 
   const onSubmit = (values: FormValues) => {
+    console.log("SUBMIT", values);
     if (isEdit && initialValues?.id) {
       updateMeeting.mutate({ id: initialValues.id, ...values });
       return;
@@ -132,6 +142,7 @@ export const MeetingForm = ({
   return (
     <>
       <NewAgentDialog open={openAgent} setOpenDialog={setOpenAgent} />
+
       <div className={variant === "page" ? "rounded-xl border p-6" : ""}>
         {variant === "page" ? <Separator className="mb-6" /> : null}
 
@@ -167,7 +178,7 @@ export const MeetingForm = ({
                       placeholder="Select an agent"
                     />
                   </FormControl>
-                  <FormDescription>
+                  {!isEdit && <FormDescription>
                     Not found what you&apos;re looking for?{" "}
                     <button
                       type="button"
@@ -177,7 +188,7 @@ export const MeetingForm = ({
                       {" "}
                       Create a new agent{" "}
                     </button>
-                  </FormDescription>
+                  </FormDescription>}
                   <FormMessage />
                 </FormItem>
               )}
