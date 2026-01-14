@@ -13,12 +13,18 @@ import { useConfirm } from '@/hooks/use-confirm';
 import UpdateMeetingDialog from '../components/update-meeting-dialog';
 import LoadingState from '@/components/loading-state';
 import ErrorState from '@/components/error-state';
+import UpcomingState from '../components/upcoming-state';
+import EmptyState from '../components/empty-state';
+import ProcessingState from '../components/process-state';
+import CompletedState from '../components/completed-state';
+import ActiveState from '../components/active-state';
+
+
 interface Props {
     meetingId: string;
     onSuccess?: () => void;
   }
-// functionality:  
-// TO DO: edit meeting 
+
 const MeetingIdView = ({meetingId, onSuccess}: Props) => {
     const trpc = useTRPC();
     const router = useRouter();
@@ -26,9 +32,13 @@ const MeetingIdView = ({meetingId, onSuccess}: Props) => {
     const { data } = useSuspenseQuery(
       trpc.meetings.getOne.queryOptions({ id: meetingId }),
     );
+    const isActive = data.status === "active";
+    const isUpcoming = data.status === "upcoming";
+    const isCancelled = data.status === "cancelled";
+    const isCompleted = data.status === "completed";
+    const isProcessing = data.status === "processing";
 
-
-    const removeMeeting = useMutation(trpc.meetings.remove.mutationOptions({
+    const removeMeeting = useMutation(trpc.meetings.delete.mutationOptions({
         onSuccess: async () => {
             // 1. Invalidate queries first
             await queryClient.invalidateQueries({
@@ -48,6 +58,7 @@ const MeetingIdView = ({meetingId, onSuccess}: Props) => {
             toast.error(error.message);
         }
     }));
+
 
     const [openMeetingDialog, setOpenMeetingDialog] = useState(false);
 
@@ -69,7 +80,11 @@ const MeetingIdView = ({meetingId, onSuccess}: Props) => {
     {openMeetingDialog && <UpdateMeetingDialog open={openMeetingDialog} setOpenDialog={setOpenMeetingDialog} initialValues={data}/>}
     <div className="flex-1 py-4 px-4 md:px-8 flex flex-col gap-y-4">
         <MeetingIdViewHeader meetingName={data.name} meetingId={data.id} onEdit={()=> setOpenMeetingDialog(true)} onRemove={handleRemoveAgent}/>
-            {JSON.stringify(data, null, 2)}
+        {isCancelled && <EmptyState/>  }
+        {isActive &&  <ActiveState/> }
+        {isUpcoming && <UpcomingState/> }
+        {isCompleted &&  <CompletedState/>  }
+        {isProcessing && <div> <ProcessingState/></div>  }
     </div>
     </>
   )
