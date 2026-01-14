@@ -5,27 +5,8 @@ import { and, count, eq, getTableColumns, ilike, sql } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { MIN_PAGE_SIZE, MAX_PAGE_SIZE, DEFAULT_PAGE_SIZE } from "@/constants";
-import { meetingsInsertSchema, meetingUpdateSchema } from "../schemas";
+import { meetingsInsertSchema, meetingsUpdateSchema } from "../schemas";
 export const meetingsRouter = createTRPCRouter({
-  remove: protectedProcedure
-  .input(meetingUpdateSchema)
-  .mutation(async ({ ctx, input }) => {
-    const [removedMeeting] = await db
-      .delete(meetings)
-      .where(
-        and(eq(meetings.id, input.id), eq(meetings.userId, ctx.auth.user.id)),
-      )
-      .returning();
-    if (!removedMeeting) {
-      throw new TRPCError({
-        code: "NOT_FOUND",
-        message: "Meeting not found!",
-      });
-    }
-
-    return removedMeeting;
-  }),
-
   // ======================
   // Get ONE meeting
   // ======================
@@ -35,7 +16,7 @@ export const meetingsRouter = createTRPCRouter({
       const [meeting] = await db
         .select({
           ...getTableColumns(meetings),
-          duration: sql<number>`EXTRACT(EPOCH FROM (ended_at - started_at))`.as(
+          duration: sql<null>`EXTRACT(EPOCH FROM (ended_at - started_at))`.as(
             "duration",
           ),
         })
@@ -88,7 +69,7 @@ export const meetingsRouter = createTRPCRouter({
         .select({
           ...getTableColumns(meetings),
           agent: agents,
-          duration: sql<number>`EXTRACT(EPOCH FROM (ended_at - started_at))`.as(
+          duration: sql<null>`EXTRACT(EPOCH FROM (ended_at - started_at))`.as(
             "duration",
           ),
         })
@@ -148,29 +129,39 @@ export const meetingsRouter = createTRPCRouter({
   // Update meeting
   // ======================
   update: protectedProcedure
-  .input(meetingUpdateSchema)
+  .input(meetingsUpdateSchema)
   .mutation(async ({ ctx, input }) => {
     const { id, ...updateData } = input;
+
+    // Guard: no fields to update
     if (Object.keys(updateData).length === 0) {
       const [existing] = await db
         .select()
         .from(meetings)
-        .where(and(eq(meetings.id, id), eq(meetings.userId, ctx.auth.user.id)));
+        .where(
+          and(
+            eq(meetings.id, id),
+            eq(meetings.userId, ctx.auth.user.id),
+          ),
+        );
+
       if (!existing) {
         throw new TRPCError({
           code: "NOT_FOUND",
           message: "Meeting not found!",
         });
       }
+
       return existing;
     }
+
     const [updated] = await db
       .update(meetings)
-      .set(updateData) 
+      .set(updateData)
       .where(
         and(
           eq(meetings.id, id),
-          eq(meetings.userId, ctx.auth.user.id)
+          eq(meetings.userId, ctx.auth.user.id),
         ),
       )
       .returning();
@@ -184,6 +175,7 @@ export const meetingsRouter = createTRPCRouter({
 
     return updated;
   }),
+
 
   // ======================
   // Delete meeting

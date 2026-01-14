@@ -130,7 +130,6 @@ export const MeetingForm = ({
   const isPending = createMeeting.isPending || updateMeeting.isPending;
 
   const onSubmit = (values: FormValues) => {
-    console.log("SUBMIT", values);
     if (isEdit && initialValues?.id) {
       updateMeeting.mutate({ id: initialValues.id, ...values });
       return;

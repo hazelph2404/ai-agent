@@ -12,8 +12,7 @@ interface Props {
     params: Promise<{meetingId: string;}>
 }
 const Page = async ({params}: Props) => {
-    const {meetingId} = await params;  
-    console.log(meetingId)
+    const {meetingId} = await params;     
     const requestHeaders = await headers();  
     const session = await auth.api.getSession({
         headers: requestHeaders,
@@ -24,7 +23,8 @@ const Page = async ({params}: Props) => {
     const queryClient =  getQueryClient({
         headers: requestHeaders,
       });
-    void queryClient.prefetchQuery(trpc.meetings.getOne.queryOptions({
+    // *** IMPORTANT NOTE ****
+    await queryClient.prefetchQuery(trpc.meetings.getOne.queryOptions({
         id: meetingId
     }))
 
