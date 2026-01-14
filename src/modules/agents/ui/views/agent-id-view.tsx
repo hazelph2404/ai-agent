@@ -97,9 +97,7 @@ const AgentIdView = ({ agentId, onSuccess }: Props) => {
           />
         </div>
 
-        {/* Main card */}
         <div className="mt-8 rounded-xl border bg-background shadow-sm">
-          {/* Stats */}
           <div className="flex flex-wrap gap-3 border-b px-6 py-4">
             <Badge
               variant="outline"
