@@ -4,9 +4,45 @@ import { meetings, agents } from "@/db/schema";
 import { and, count, eq, getTableColumns, ilike, sql } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
+import {streamVideo} from '@/lib/stream-video';
 import { MIN_PAGE_SIZE, MAX_PAGE_SIZE, DEFAULT_PAGE_SIZE } from "@/constants";
 import { meetingsInsertSchema, meetingsUpdateSchema } from "../schemas";
+import { generateAvatarUri } from "@/lib/avatar";
 export const meetingsRouter = createTRPCRouter({
+  generateToken: protectedProcedure
+    .input(z.object({ agentId: z.string().optional() }))
+    .mutation(async ({ ctx, input }) => {
+      // 1. Cập nhật User lên Stream kèm theo Avatar tự động nếu chưa có ảnh
+      await streamVideo.upsertUsers([
+        {
+          id: ctx.auth.user.id,
+          name: ctx.auth.user.name || ctx.auth.user.email,
+          role: "admin",
+          image: ctx.auth.user.image ?? generateAvatarUri({
+            seed: ctx.auth.user.name || ctx.auth.user.email,
+            variant: "initials",
+          }),
+          custom: {
+            current_agent_id: input.agentId 
+          }
+        },
+      ]);
+
+      // 2. Thiết lập thời gian (tính bằng giây)
+      // Expiration: hết hạn sau 1 giờ tính từ hiện tại
+      const expirationTime = Math.floor(Date.now() / 1000) + 3600;
+      // IssuedAt: thời điểm tạo (lùi lại 1 phút để tránh lệch múi giờ giữa các server)
+      const issuedAt = Math.floor(Date.now() / 1000) - 60;
+
+      // 3. Tạo Token với đầy đủ thông số bảo mật
+      const token = streamVideo.createToken(
+        ctx.auth.user.id,
+        expirationTime,
+        issuedAt
+      );
+
+      return token;
+    }),
   // ======================
   // Get ONE meeting
   // ======================
@@ -123,6 +159,60 @@ export const meetingsRouter = createTRPCRouter({
           status: "upcoming",
         })
         .returning();
+      const call = streamVideo.video.call("default", meeting.id)
+      await call.create({
+        data: {
+          created_by_id: ctx.auth.user.id,
+          custom: {
+            meetingId: meeting.id, 
+            meetingName: meeting.name,
+          }, 
+          settings_override:{
+            transcription: {
+              language: "en",
+              mode: "auto-on",
+              closed_caption_mode: "auto-on",
+            },
+            recording: {
+              mode: "auto-on",
+              quality: "1080p",
+            }
+          }
+        }
+      });
+      const [existingAgent] = await db
+      .select()
+      .from(agents)
+      .where(eq(agents.id, meeting.agentId)) 
+
+      if (!existingAgent) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Agent not found or does not belong to you",
+        });
+      }
+
+      await streamVideo.upsertUsers([
+        {
+          // Thông tin của User đang đăng nhập (lấy từ context)
+          id: ctx.auth.user.id,
+          name: ctx.auth.user.name || ctx.auth.user.email,
+          image: ctx.auth.user.image || generateAvatarUri({
+            seed: ctx.auth.user.name || ctx.auth.user.email,
+            variant: "initials",
+          }),
+          role: "user",
+        },
+        {
+          id: existingAgent.id,
+          name: existingAgent.name,
+          image: generateAvatarUri({
+            seed: existingAgent.name,
+            variant: "botttsNeutral",
+          }),
+          role: "user",
+        }
+      ]);
       return meeting;
     }),
   // ======================

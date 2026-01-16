@@ -28,6 +28,7 @@ import { MeetingGetOne } from "@/modules/meetings/types";
 import { useState } from "react";
 import GeneratedAvatar from "@/components/generated-avatar";
 import NewAgentDialog from "@/modules/agents/ui/components/new-agent-dialog";
+import {useRouter} from "next/navigation";
 
 type FormValues = z.infer<typeof meetingsInsertSchema>;
 
@@ -51,7 +52,7 @@ export const MeetingForm = ({
   const { data } = useSuspenseQuery(
     trpc.agents.getMany.queryOptions({ pageSize: 100, search: agentSearch }),
   );
-
+  const router = useRouter();
   const agents = data.items;
   const agentOptions = agents.map((agent) => ({
     id: agent.id,
@@ -93,7 +94,7 @@ export const MeetingForm = ({
         await queryClient.invalidateQueries(
           trpc.meetings.getMany.queryOptions({}),
         );
-
+        router.push(`/call/${meeting.id}`);
         onSuccess?.(meeting.id);
         form.reset({ name: "", agentId: "" });
       },
