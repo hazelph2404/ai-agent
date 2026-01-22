@@ -34,7 +34,7 @@ export const CallUI = ({ meetingName }: Props) => {
 
     await call.leave();
     setShow("ended");
-    window.location.assign("/");
+    setTimeout(() => window.location.assign("/"), 2000);
   };
 
   return (
