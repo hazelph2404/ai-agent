@@ -1,12 +1,6 @@
 "use client";
 
 import { useEffect, useState, useMemo } from "react";
-import {
-  StreamCall,
-  StreamTheme,
-  SpeakerLayout,
-  CallControls,
-} from "@stream-io/video-react-sdk";
 import { useStreamVideoClient } from "../hooks/use-stream-video-client";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "sonner";
@@ -14,7 +8,6 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { useTRPC } from "@/trpc/client";
 import ErrorState from "@/components/error-state";
 import { Loader2Icon } from "lucide-react";
-import { MyVideoButton, MyMicrophoneButton } from "../components/call-buttons";
 import { CallProvider } from "../components/call-provider";
 interface Props {
   meetingId: string;

@@ -3,13 +3,12 @@
 import { useState } from "react";
 import {
   useCall,
-  SpeakerLayout,
-  CallControls,
   StreamTheme,
 } from "@stream-io/video-react-sdk";
 
 import { CallLobby } from "./call-lobby";
 import { CallActive } from "./call-active";
+import CallEnded from "./call-end";
 
 interface Props {
   meetingName: string;
@@ -52,11 +51,7 @@ export const CallUI = ({ meetingName }: Props) => {
         )}
 
         {show === "ended" && (
-          <div className="flex-1 flex items-center justify-center">
-            <p className="text-xl font-semibold text-muted-foreground">
-              Meeting has ended.
-            </p>
-          </div>
+          <CallEnded/>
         )}
       </main>
     </StreamTheme>

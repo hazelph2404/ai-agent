@@ -21,7 +21,6 @@ const DisabledVideoPreview = () => {
   return (
     <div className="absolute inset-0 flex items-center justify-center bg-zinc-900/90 backdrop-blur-xl transition-all duration-500">
       <div className="relative flex items-center justify-center">
-        {/* Hào quang tinh tế phía sau */}
         <div className="absolute inset-0 bg-zinc-400/10 rounded-full blur-3xl animate-pulse" />
 
         <DefaultVideoPlaceholder
@@ -85,7 +84,6 @@ export const CallLobby = ({ onJoin }: Props) => {
   const { hasBrowserPermission: hasCameraPermission, devices } =
     useCameraState();
   const { hasBrowserPermission: hasMicPermission } = useMicrophoneState();
-  const hasMediaPermission = hasCameraPermission && hasMicPermission;
   const isCameraAvailable = devices && devices.length > 0;
   return (
     <div className="flex flex-col items-center justify-center h-full bg-radial from-sidebar-accent to-sidebar">
