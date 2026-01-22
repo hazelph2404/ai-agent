@@ -13,14 +13,13 @@ export default function NewMeetingDialog({
 }) {
   const router = useRouter();
   return (
-
     <CommandResponsiveDialog
-    open={open} 
-    onOpenChange={setOpenDialog}
-    title="New Meeting"
-    description="Create a new meeting"
-  >
-    <div className="px-6 pt-6 py-6 space-y-2">
+      open={open}
+      onOpenChange={setOpenDialog}
+      title="New Meeting"
+      description="Create a new meeting"
+    >
+      <div className="px-6 pt-6 py-6 space-y-2">
         <MeetingForm
           variant="dialog"
           onSuccess={(meetingId) => {

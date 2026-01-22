@@ -1,5 +1,5 @@
-import React from 'react'
-import { Loader2, Sparkles } from 'lucide-react'
+import React from "react";
+import { Loader2, Sparkles } from "lucide-react";
 
 const ProcessingState = () => {
   return (
@@ -12,10 +12,12 @@ const ProcessingState = () => {
       </div>
 
       <div className="space-y-1">
-        <h3 className="text-lg font-medium text-zinc-900">AI is hard at work...</h3>
+        <h3 className="text-lg font-medium text-zinc-900">
+          AI is hard at work...
+        </h3>
         <p className="text-sm text-zinc-500 max-w-[400px]">
-          We&apos;re currently transcribing your meeting and generating an intelligent summary. 
-          This usually takes less than a minute.
+          We&apos;re currently transcribing your meeting and generating an
+          intelligent summary. This usually takes less than a minute.
         </p>
       </div>
 
@@ -28,7 +30,7 @@ const ProcessingState = () => {
         Analyzing sentiments & key takeaways
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default ProcessingState
+export default ProcessingState;

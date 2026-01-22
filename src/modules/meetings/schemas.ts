@@ -14,7 +14,6 @@ export const meetingsInsertSchema = z.object({
   agentId: z.string().min(1, { message: "Please choose an agent" }),
 });
 
-
 export const meetingsUpdateSchema = meetingsInsertSchema.partial().extend({
   id: z.string().min(1, { message: "Id meeting is required" }),
 });
