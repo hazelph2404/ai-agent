@@ -17,7 +17,7 @@ export const meetingsRouter = createTRPCRouter({
         role: "admin",
         image:
           ctx.auth.user.image ??
-          generateAvatarUri({
+          await generateAvatarUri({
             seed: ctx.auth.user.name || ctx.auth.user.email,
             variant: "initials",
           }),
@@ -29,7 +29,6 @@ export const meetingsRouter = createTRPCRouter({
       user_id: ctx.auth.user.id,
       exp: expirationTime,
       iat: issuedAt,
-    });
     });
 
     return token;
@@ -125,7 +124,6 @@ export const meetingsRouter = createTRPCRouter({
   create: protectedProcedure
     .input(meetingsInsertSchema)
     .mutation(async ({ ctx, input }) => {
-      // Verify the agent exists and belongs to the current user
       const [agent] = await db
         .select({ id: agents.id })
         .from(agents)
@@ -151,26 +149,35 @@ export const meetingsRouter = createTRPCRouter({
         })
         .returning();
       const call = streamVideo.video.call("default", meeting.id);
-      await call.create({
-        data: {
-          created_by_id: ctx.auth.user.id,
-          custom: {
-            meetingId: meeting.id,
-            meetingName: meeting.name,
-          },
-          settings_override: {
-            transcription: {
-              language: "en",
-              mode: "auto-on",
-              closed_caption_mode: "auto-on",
+      try{
+        await call.create({
+          data: {
+            created_by_id: ctx.auth.user.id,
+            custom: {
+              meetingId: meeting.id,
+              meetingName: meeting.name,
             },
-            recording: {
-              mode: "auto-on",
-              quality: "1080p",
+            settings_override: {
+              transcription: {
+                language: "en",
+                mode: "auto-on",
+                closed_caption_mode: "auto-on",
+              },
+              recording: {
+                mode: "auto-on",
+                quality: "1080p",
+              },
             },
           },
-        },
-      });
+        });
+      } catch(error){
+          await db.delete(meetings).where(eq(meetings.id, meeting.id));
+          throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to create video call",
+       });
+          console.log("SERVER ERROR ",error)
+      }
       const [existingAgent] = await db
         .select()
         .from(agents)
@@ -189,7 +196,7 @@ export const meetingsRouter = createTRPCRouter({
           name: ctx.auth.user.name || ctx.auth.user.email,
           image:
             ctx.auth.user.image ||
-            generateAvatarUri({
+            await generateAvatarUri({
               seed: ctx.auth.user.name || ctx.auth.user.email,
               variant: "initials",
             }),
@@ -198,7 +205,7 @@ export const meetingsRouter = createTRPCRouter({
         {
           id: existingAgent.id,
           name: existingAgent.name,
-          image: generateAvatarUri({
+          image: await generateAvatarUri({
             seed: existingAgent.name,
             variant: "botttsNeutral",
           }),

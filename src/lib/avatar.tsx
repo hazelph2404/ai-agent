@@ -1,19 +1,17 @@
 import { createAvatar } from "@dicebear/core";
 import { botttsNeutral, initials } from "@dicebear/collection";
-
-interface Props {
-  seed: string;
-  variant: "botttsNeutral" | "initials";
+import { toPng } from "@dicebear/converter";
+interface Props{
+  seed: string,
+  variant:string
 }
-
-export const generateAvatarUri = ({ seed, variant }: Props) => {
+export const generateAvatarUri = async ({ seed, variant }: Props) => {
   let avatar;
-
   if (variant === "botttsNeutral") {
     avatar = createAvatar(botttsNeutral, { seed });
   } else {
-    avatar = createAvatar(initials, { seed, fontWeight: 500, fontSize: 42 });
+    avatar = createAvatar(initials, { seed, size: 128 });
   }
-
-  return avatar.toDataUri();
+  const dataUri = await toPng(avatar).toDataUri();
+  return dataUri;
 };

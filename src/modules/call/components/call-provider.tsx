@@ -12,13 +12,29 @@ interface Props {
 
 export const CallProvider = ({ meetingId, meetingName }: Props) => {
   const [isMounted, setIsMounted] = useState(false);
+  const [image, setUserImage] = useState<string | null>(null);
   const { data, isPending } = authClient.useSession();
 
   useEffect(() => {
     setIsMounted(true);
+
   }, []);
 
-  if (!isMounted || !data || isPending) {
+  useEffect(() => {
+    if (!data) return;
+
+    if (data.user.image) {
+      setUserImage(data.user.image);
+      return;
+    }
+
+    generateAvatarUri({
+      seed: data.user.name,
+      variant: "initials",
+    }).then(setUserImage);
+  }, [data]);
+
+  if (!isMounted || !data || isPending || !image) {
     return (
       <div className="flex items-center justify-center h-full w-full bg-gradient-to-br from-sidebar-accent to-sidebar">
         <LoaderIcon className="size-6 animate-spin text-white" />
@@ -32,10 +48,7 @@ export const CallProvider = ({ meetingId, meetingName }: Props) => {
       meetingName={meetingName}
       userId={data.user.id}
       userName={data.user.name}
-      userImage={
-        data.user.image ??
-        generateAvatarUri({ seed: data.user.name, variant: "initials" })
-      }
+      userImage={image}
     />
   );
 };
