@@ -12,7 +12,7 @@ export const useStreamVideoClient = (userId: string, userName: string) => {
   const trpc = useTRPC();
 
   const generateTokenMutation = useMutation(
-    trpc.meetings.generateToken.mutationOptions()
+    trpc.meetings.generateToken.mutationOptions(),
   );
 
   useEffect(() => {

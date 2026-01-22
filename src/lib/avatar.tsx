@@ -4,7 +4,7 @@ import { botttsNeutral, initials } from "@dicebear/collection";
 interface Props {
   seed: string;
   variant: "botttsNeutral" | "initials";
-};
+}
 
 export const generateAvatarUri = ({ seed, variant }: Props) => {
   let avatar;

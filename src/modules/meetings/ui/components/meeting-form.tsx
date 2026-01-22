@@ -28,7 +28,7 @@ import { MeetingGetOne } from "@/modules/meetings/types";
 import { useState } from "react";
 import GeneratedAvatar from "@/components/generated-avatar";
 import NewAgentDialog from "@/modules/agents/ui/components/new-agent-dialog";
-import {useRouter} from "next/navigation";
+import { useRouter } from "next/navigation";
 
 type FormValues = z.infer<typeof meetingsInsertSchema>;
 
@@ -80,7 +80,7 @@ export const MeetingForm = ({
 
   useEffect(() => {
     if (!initialValues) return;
-  
+
     form.reset({
       name: initialValues.name ?? "",
       agentId: initialValues.agentId ?? "",
@@ -119,7 +119,6 @@ export const MeetingForm = ({
         }
 
         onSuccess?.(meeting.id);
-
       },
       onError: (error) => {
         toast.error(error.message);
@@ -178,17 +177,19 @@ export const MeetingForm = ({
                       placeholder="Select an agent"
                     />
                   </FormControl>
-                  {!isEdit && <FormDescription>
-                    Not found what you&apos;re looking for?{" "}
-                    <button
-                      type="button"
-                      className="text-primary hover:underline"
-                      onClick={() => setOpenAgent(true)}
-                    >
-                      {" "}
-                      Create a new agent{" "}
-                    </button>
-                  </FormDescription>}
+                  {!isEdit && (
+                    <FormDescription>
+                      Not found what you&apos;re looking for?{" "}
+                      <button
+                        type="button"
+                        className="text-primary hover:underline"
+                        onClick={() => setOpenAgent(true)}
+                      >
+                        {" "}
+                        Create a new agent{" "}
+                      </button>
+                    </FormDescription>
+                  )}
                   <FormMessage />
                 </FormItem>
               )}

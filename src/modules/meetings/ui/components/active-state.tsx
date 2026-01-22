@@ -1,6 +1,6 @@
-import React from 'react';
-import { Video, Radio } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import React from "react";
+import { Video, Radio } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface ActiveStateProps {
   onJoin?: () => void;
@@ -14,7 +14,7 @@ const ActiveState = ({ onJoin }: ActiveStateProps) => {
         <div className="p-4 rounded-full bg-emerald-50 text-emerald-600/80">
           <Video className="size-8" />
         </div>
-        
+
         {/* FIXED: Pulse indicator now matches the Green/Emerald theme */}
         <span className="absolute top-0 right-0 flex h-3 w-3">
           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400/40 opacity-75"></span>
@@ -25,13 +25,14 @@ const ActiveState = ({ onJoin }: ActiveStateProps) => {
       <div className="space-y-1">
         <h3 className="text-lg font-medium text-zinc-900">Meeting is Live</h3>
         <p className="text-sm text-zinc-500 max-w-[300px]">
-          The session is currently in progress. Join now to participate and see the live transcript.
+          The session is currently in progress. Join now to participate and see
+          the live transcript.
         </p>
       </div>
 
-      <Button 
+      <Button
         onClick={onJoin}
-        size="lg" 
+        size="lg"
         className="mt-4 bg-[#5c7c8a] hover:bg-[#4a6571] text-white font-medium shadow-sm transition-all active:scale-95"
       >
         <Radio className="mr-2 size-4" />

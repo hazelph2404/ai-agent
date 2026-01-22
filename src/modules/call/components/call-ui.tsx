@@ -1,19 +1,19 @@
 "use client";
 
 import { useState } from "react";
-import { 
-  useCall, 
+import {
+  useCall,
   SpeakerLayout,
   CallControls,
   StreamTheme,
 } from "@stream-io/video-react-sdk";
 
-import {CallLobby} from "./call-lobby";
+import { CallLobby } from "./call-lobby";
 import { CallActive } from "./call-active";
 
 interface Props {
   meetingName: string;
-};
+}
 
 export const CallUI = ({ meetingName }: Props) => {
   const call = useCall();
@@ -48,17 +48,17 @@ export const CallUI = ({ meetingName }: Props) => {
         )}
 
         {show === "call" && (
-          <CallActive onLeave={handleLeave} meetingName={meetingName}/>
+          <CallActive onLeave={handleLeave} meetingName={meetingName} />
         )}
 
         {show === "ended" && (
           <div className="flex-1 flex items-center justify-center">
-             <p className="text-xl font-semibold text-muted-foreground">
-               Meeting has ended.
-             </p>
+            <p className="text-xl font-semibold text-muted-foreground">
+              Meeting has ended.
+            </p>
           </div>
         )}
-        </main>
+      </main>
     </StreamTheme>
   );
 };

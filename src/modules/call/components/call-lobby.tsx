@@ -1,13 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { 
-  useCallStateHooks, 
-  VideoPreview, 
-  ToggleAudioPreviewButton, 
+import {
+  useCallStateHooks,
+  VideoPreview,
+  ToggleAudioPreviewButton,
   ToggleVideoPreviewButton,
   DefaultVideoPlaceholder,
-  StreamVideoParticipant
+  StreamVideoParticipant,
 } from "@stream-io/video-react-sdk";
 import { LogInIcon } from "lucide-react";
 
@@ -23,15 +23,19 @@ const DisabledVideoPreview = () => {
       <div className="relative flex items-center justify-center">
         {/* Hào quang tinh tế phía sau */}
         <div className="absolute inset-0 bg-zinc-400/10 rounded-full blur-3xl animate-pulse" />
-        
-        <DefaultVideoPlaceholder 
-          participant={{
-            name: data?.user.name ?? "",
-            image: data?.user.image ?? generateAvatarUri({
-              seed: data?.user.name ?? "",
-              variant: "initials",
-            }),
-          } as StreamVideoParticipant}
+
+        <DefaultVideoPlaceholder
+          participant={
+            {
+              name: data?.user.name ?? "",
+              image:
+                data?.user.image ??
+                generateAvatarUri({
+                  seed: data?.user.name ?? "",
+                  variant: "initials",
+                }),
+            } as StreamVideoParticipant
+          }
         />
       </div>
 
@@ -78,8 +82,9 @@ interface Props {
 
 export const CallLobby = ({ onJoin }: Props) => {
   const { useCameraState, useMicrophoneState } = useCallStateHooks();
-  const {hasBrowserPermission:hasCameraPermission, devices} = useCameraState();
-  const {hasBrowserPermission: hasMicPermission } = useMicrophoneState();
+  const { hasBrowserPermission: hasCameraPermission, devices } =
+    useCameraState();
+  const { hasBrowserPermission: hasMicPermission } = useMicrophoneState();
   const hasMediaPermission = hasCameraPermission && hasMicPermission;
   const isCameraAvailable = devices && devices.length > 0;
   return (
@@ -87,18 +92,18 @@ export const CallLobby = ({ onJoin }: Props) => {
       <div className="py-4 px-8 flex flex-col items-center justify-center gap-y-6 bg-background rounded-lg p-10 shadow-sm border">
         <div className="flex flex-col gap-y-2 text-center">
           <h6 className="text-lg font-medium">Ready to join?</h6>
-          <p className="text-sm text-muted-foreground">Set up your call before joining</p>
+          <p className="text-sm text-muted-foreground">
+            Set up your call before joining
+          </p>
         </div>
-        
+
         <div className="max-w-[400px] w-full aspect-video border rounded-xl overflow-hidden shadow-md bg-black relative">
           {!hasCameraPermission ? (
             <AllowBrowserPermissions />
           ) : !isCameraAvailable ? (
             <DisabledVideoPreview />
           ) : (
-            <VideoPreview 
-              DisabledVideoPreview={DisabledVideoPreview}
-            />
+            <VideoPreview DisabledVideoPreview={DisabledVideoPreview} />
           )}
         </div>
 
@@ -109,18 +114,14 @@ export const CallLobby = ({ onJoin }: Props) => {
           </div>
 
           <div className="flex items-center gap-x-3 w-full">
-            <Button 
-              variant="ghost" 
+            <Button
+              variant="ghost"
               onClick={() => window.location.assign("/")}
               className="flex-1"
             >
               <Link href="/meetings"> Cancel </Link>
-              
             </Button>
-            <Button 
-              onClick={onJoin}
-              className="flex-1 font-semibold"
-            >
+            <Button onClick={onJoin} className="flex-1 font-semibold">
               <LogInIcon className="size-4 mr-2" />
               Join
             </Button>
@@ -129,4 +130,4 @@ export const CallLobby = ({ onJoin }: Props) => {
       </div>
     </div>
   );
-}
+};

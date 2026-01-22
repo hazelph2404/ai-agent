@@ -15,10 +15,9 @@ export default function UpdateMeetingDialog({
   setOpenDialog,
   initialValues,
 }: Props) {
-
   return (
     <CommandResponsiveDialog
-      open={open} 
+      open={open}
       onOpenChange={setOpenDialog}
       title="Edit Meeting"
       description="Edit the meeting details"
@@ -26,7 +25,7 @@ export default function UpdateMeetingDialog({
       <div className="px-6 pt-6 py-6 space-y-2">
         <MeetingForm
           variant="dialog"
-          initialValues={initialValues} 
+          initialValues={initialValues}
           onSuccess={() => {
             setOpenDialog(false);
           }}

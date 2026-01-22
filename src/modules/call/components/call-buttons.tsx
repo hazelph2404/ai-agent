@@ -10,9 +10,11 @@ export const MyVideoButton = () => {
       onClick={() => camera.toggle()}
       className={`
         flex flex-col items-center justify-center gap-1 p-3 rounded-xl transition-all
-        ${isMute 
-          ? "bg-destructive/10 text-destructive hover:bg-destructive/20" 
-          : "bg-secondary text-secondary-foreground hover:bg-secondary/80"}
+        ${
+          isMute
+            ? "bg-destructive/10 text-destructive hover:bg-destructive/20"
+            : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
+        }
         min-w-[100px] border shadow-sm
       `}
     >
@@ -33,9 +35,11 @@ export const MyMicrophoneButton = () => {
       onClick={() => microphone.toggle()}
       className={`
         flex flex-col items-center justify-center gap-1 p-3 rounded-xl transition-all
-        ${isMute 
-          ? "bg-destructive/10 text-destructive hover:bg-destructive/20" 
-          : "bg-secondary text-secondary-foreground hover:bg-secondary/80"}
+        ${
+          isMute
+            ? "bg-destructive/10 text-destructive hover:bg-destructive/20"
+            : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
+        }
         min-w-[100px] border shadow-sm
       `}
     >

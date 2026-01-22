@@ -1,7 +1,7 @@
-import React from 'react';
-import { Ban, ArrowLeft, Plus } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { useRouter } from 'next/navigation';
+import React from "react";
+import { Ban, ArrowLeft, Plus } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 
 const EmptyState = () => {
   const router = useRouter();
@@ -17,25 +17,30 @@ const EmptyState = () => {
 
       <div className="space-y-1">
         {/* Muted Red Heading */}
-        <h3 className="text-lg font-medium text-[#9f5d5d]">Meeting Cancelled</h3>
+        <h3 className="text-lg font-medium text-[#9f5d5d]">
+          Meeting Cancelled
+        </h3>
         <p className="text-sm text-zinc-500 max-w-[300px]">
-          This session is no longer active. You can return to your dashboard or start a fresh meeting.
+          This session is no longer active. You can return to your dashboard or
+          start a fresh meeting.
         </p>
       </div>
 
       <div className="flex gap-x-3 mt-4">
-        <Button 
-          variant="outline" 
-          onClick={() => router.push('/meetings')}
+        <Button
+          variant="outline"
+          onClick={() => router.push("/meetings")}
           className="text-zinc-600 border-zinc-300 hover:bg-zinc-100 font-medium transition-colors"
         >
           <ArrowLeft className="mr-2 size-4" />
           Go Back
         </Button>
         {/* Matches your "New Meeting" button style exactly */}
-        <Button 
+        <Button
           className="bg-zinc-900 hover:bg-zinc-800 text-white font-medium shadow-sm transition-all"
-          onClick={() => { /* Your create logic */ }}
+          onClick={() => {
+            /* Your create logic */
+          }}
         >
           <Plus className="mr-2 size-4" />
           New Meeting

@@ -2,12 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { 
-  Call, 
-  CallingState, 
-  StreamCall, 
-  StreamVideo, 
-  StreamVideoClient 
+import {
+  Call,
+  CallingState,
+  StreamCall,
+  StreamVideo,
+  StreamVideoClient,
 } from "@stream-io/video-react-sdk";
 import { LoaderIcon } from "lucide-react";
 
@@ -21,7 +21,7 @@ interface Props {
   userId: string;
   userName: string;
   userImage: string;
-};
+}
 
 export const CallConnect = ({
   meetingId,
@@ -38,9 +38,7 @@ export const CallConnect = ({
     trpc.meetings.generateToken.mutationOptions(),
   );
 
-
   useEffect(() => {
-
     const _client = new StreamVideoClient({
       apiKey: process.env.NEXT_PUBLIC_STREAM_API_KEY!,
       user: {
@@ -57,16 +55,16 @@ export const CallConnect = ({
       _client.disconnectUser(); //explain?
       setClient(undefined);
     };
-    
-    // Note
-    }, [userId, userName, userImage, generateToken]);
 
-    useEffect(() => {
+    // Note
+  }, [userId, userName, userImage, generateToken]);
+
+  useEffect(() => {
     if (!client) return;
 
     const _call = client.call("default", meetingId);
-    
-      // i don't need await here?
+
+    // i don't need await here?
     _call.camera.disable();
     _call.microphone.disable();
 
@@ -81,11 +79,10 @@ export const CallConnect = ({
     };
   }, [client, meetingId]);
 
-
   if (!client || !call) {
     return (
       <div className="flex items-center justify-center h-full w-full bg-radial from-sidebar-accent to-sidebar">
-        <LoaderIcon className="size-6 animate-spin text-white"/>
+        <LoaderIcon className="size-6 animate-spin text-white" />
       </div>
     );
   }
@@ -93,7 +90,7 @@ export const CallConnect = ({
   return (
     <StreamVideo client={client}>
       <StreamCall call={call}>
-        <CallUI meetingName={meetingName}/>
+        <CallUI meetingName={meetingName} />
       </StreamCall>
     </StreamVideo>
   );
