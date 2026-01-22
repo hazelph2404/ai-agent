@@ -29,7 +29,6 @@ const ActiveState = ({ onJoin }: ActiveStateProps) => {
         </p>
       </div>
 
-      {/* Muted Blue Button - matches your "New Meeting" button style */}
       <Button 
         onClick={onJoin}
         size="lg" 

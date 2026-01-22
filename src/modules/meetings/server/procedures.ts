@@ -10,9 +10,7 @@ import { meetingsInsertSchema, meetingsUpdateSchema } from "../schemas";
 import { generateAvatarUri } from "@/lib/avatar";
 export const meetingsRouter = createTRPCRouter({
   generateToken: protectedProcedure
-    .input(z.object({ agentId: z.string().optional() }))
-    .mutation(async ({ ctx, input }) => {
-      // 1. Cập nhật User lên Stream kèm theo Avatar tự động nếu chưa có ảnh
+    .mutation(async ({ ctx }) => {
       await streamVideo.upsertUsers([
         {
           id: ctx.auth.user.id,
@@ -21,25 +19,16 @@ export const meetingsRouter = createTRPCRouter({
           image: ctx.auth.user.image ?? generateAvatarUri({
             seed: ctx.auth.user.name || ctx.auth.user.email,
             variant: "initials",
-          }),
-          custom: {
-            current_agent_id: input.agentId 
-          }
+          })
         },
       ]);
-
-      // 2. Thiết lập thời gian (tính bằng giây)
-      // Expiration: hết hạn sau 1 giờ tính từ hiện tại
       const expirationTime = Math.floor(Date.now() / 1000) + 3600;
-      // IssuedAt: thời điểm tạo (lùi lại 1 phút để tránh lệch múi giờ giữa các server)
       const issuedAt = Math.floor(Date.now() / 1000) - 60;
-
-      // 3. Tạo Token với đầy đủ thông số bảo mật
-      const token = streamVideo.createToken(
-        ctx.auth.user.id,
-        expirationTime,
-        issuedAt
-      );
+      const token = streamVideo.generateUserToken({
+        user_id: ctx.auth.user.id,
+        exp: expirationTime,
+        validity_in_seconds: issuedAt,
+    });
 
       return token;
     }),
@@ -194,7 +183,6 @@ export const meetingsRouter = createTRPCRouter({
 
       await streamVideo.upsertUsers([
         {
-          // Thông tin của User đang đăng nhập (lấy từ context)
           id: ctx.auth.user.id,
           name: ctx.auth.user.name || ctx.auth.user.email,
           image: ctx.auth.user.image || generateAvatarUri({

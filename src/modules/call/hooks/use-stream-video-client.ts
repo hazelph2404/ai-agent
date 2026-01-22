@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { StreamVideoClient, User } from "@stream-io/video-react-sdk";
 import { useTRPC } from "@/trpc/client";
+import { useMutation } from "@tanstack/react-query";
 
 const apiKey = process.env.NEXT_PUBLIC_STREAM_API_KEY!;
 
@@ -10,29 +11,38 @@ export const useStreamVideoClient = (userId: string, userName: string) => {
   const [client, setClient] = useState<StreamVideoClient | null>(null);
   const trpc = useTRPC();
 
-  const { mutateAsync: generateToken } = trpc.meetings.generateToken.useMutation();
+  const generateTokenMutation = useMutation(
+    trpc.meetings.generateToken.mutationOptions()
+  );
 
   useEffect(() => {
-    if (!userId) return;
+    if (!userId || !userName) return;
+
+    let streamClient: StreamVideoClient | null = null;
 
     const initClient = async () => {
-      const token = await generateToken({}); // Lấy token từ backend
-      
-      const user: User = { id: userId, name: userName };
-      
-      const newClient = new StreamVideoClient({ apiKey, user, token });
-      setClient(newClient);
+      try {
+        const token = await generateTokenMutation.mutateAsync();
+        const user: User = { id: userId, name: userName };
+
+        streamClient = new StreamVideoClient({
+          apiKey,
+          user,
+          token,
+        });
+
+        setClient(streamClient);
+      } catch (err) {
+        console.error("Failed to initialize Stream client", err);
+      }
     };
 
     initClient();
 
     return () => {
-      if (client) {
-        client.disconnectUser();
-        setClient(null);
-      }
+      streamClient?.disconnectUser();
     };
-  }, [userId, generateToken]);
+  }, [userId, userName]);
 
   return client;
 };
