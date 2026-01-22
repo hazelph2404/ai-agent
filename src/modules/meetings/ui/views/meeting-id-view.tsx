@@ -6,7 +6,7 @@ import {
   useQueryClient,
   useSuspenseQuery,
 } from "@tanstack/react-query";
-import { useRouter } from "next/navigation"; // Đổi từ redirect sang useRouter
+import { useRouter } from "next/navigation";
 import MeetingIdViewHeader from "../components/meeting-id-view-header";
 import { toast } from "sonner";
 import { useConfirm } from "@/hooks/use-confirm";
