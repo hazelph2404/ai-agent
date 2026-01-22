@@ -29,7 +29,8 @@ const CompletedState = ({
 
       <div className="flex gap-x-3 mt-4">
         <Button
-          onClick={onViewTranscript} // Gắn sự kiện vào đây
+          onClick={onViewTranscript}
+          variant="outline"
           variant="outline"
           className="text-zinc-600 border-zinc-300 hover:bg-zinc-100 font-medium transition-colors"
         >
