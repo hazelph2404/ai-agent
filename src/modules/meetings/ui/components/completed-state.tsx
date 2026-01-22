@@ -31,7 +31,6 @@ const CompletedState = ({
         <Button
           onClick={onViewTranscript}
           variant="outline"
-          variant="outline"
           className="text-zinc-600 border-zinc-300 hover:bg-zinc-100 font-medium transition-colors"
         >
           <FileText className="mr-2 size-4" />
